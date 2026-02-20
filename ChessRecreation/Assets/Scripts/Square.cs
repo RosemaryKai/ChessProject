@@ -17,8 +17,22 @@ namespace Chess
         /// A get-only property for if there is a piece on this square. 
         /// </summary> 
         public bool IsOccupied 
-        { get
-            { return piece != null; } 
+        { 
+            get { return piece != null; } 
+        }
+        /// <summary>
+        /// The X-Value of the square.
+        /// </summary>
+        public int X
+        {
+            get { return x; }
+        }
+        /// <summary>
+        /// The Y-Value of the square.
+        /// </summary>
+        public int Y
+        {
+            get { return y; }
         }
         // CTORS of this class
         public Square(int x, int y)

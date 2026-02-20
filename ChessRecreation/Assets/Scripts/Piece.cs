@@ -42,8 +42,16 @@ namespace Chess
         public Piece(Square startingLocation, PieceColor color)
         { 
             location = startingLocation;
-            isCaptured = false;
             this.color = color;
+            isCaptured = false;
+            hasMoved = false;
         }
+
+        // METHODS of this class
+        /// <summary>
+        /// What a piece could see if they were not blocked.
+        /// </summary>
+        /// <returns>A list of squares the piece could see.</returns>
+        public abstract List<Square> UnblockedVision(Board board);
     }
 }

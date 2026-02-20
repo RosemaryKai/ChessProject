@@ -23,6 +23,27 @@ namespace Chess
         {
             get { return pieces.Count; }
         }
+        /// <summary>
+        /// Indexer for squares of the board.
+        /// </summary>
+        /// <param name="x"></param>
+        /// <param name="y"></param>
+        /// <returns></returns>
+        public Square this[int x, int y]
+        {
+            get {
+                if(x >= board.GetLength(0) || x < 0 ||
+                    y >= board.GetLength(1) || y < 0)
+                {
+                    throw new IndexOutOfRangeException
+                        ("ERROR: Provided indecies not on the board.");
+                }
+                else
+                {
+                    return board[x, y];
+                }
+                }
+        }
 
         // CTORs of this class
         public Board()
