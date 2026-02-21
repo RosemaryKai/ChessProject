@@ -6,6 +6,9 @@ using System.Threading.Tasks;
 
 namespace Chess
 {
+    /// <summary>
+    /// A square on the chessboard.
+    /// </summary>
     internal class Square
     { 
         // FIELDS of this class

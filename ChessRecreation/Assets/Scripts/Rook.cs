@@ -52,7 +52,7 @@ namespace Chess
             {
                 // Save the current square- mainly for readability.
 
-                Square currentSquare = board[i, location.File];
+                Square currentSquare = board[location.File, i];
                 if (!currentSquare.IsOccupied)
                     seenSquares.Add(currentSquare);
 
@@ -75,7 +75,7 @@ namespace Chess
             // add the squares it can see to the list.
             for (int i = location.Rank - 1; i >= 0; i--)
             {
-                Square currentSquare = board[i, location.File];
+                Square currentSquare = board[location.File, i];
 
                 if (!currentSquare.IsOccupied)
                     seenSquares.Add(currentSquare);
@@ -94,7 +94,7 @@ namespace Chess
             // add the squares it can see to the list.
             for (int i = location.File + 1; i < board.Files; i++)
             {
-                Square currentSquare = board[location.Rank, i];
+                Square currentSquare = board[i, location.Rank];
 
                 // Same logic for squares- nothing new. Add enemy occupied squares,
                 // do not add friendly occupied squares.
@@ -113,7 +113,7 @@ namespace Chess
             // add the squares it can see to the list.
             for (int i = location.File - 1; i >= 0; i--)
             {
-                Square currentSquare = board[location.Rank, i];
+                Square currentSquare = board[i, location.Rank];
 
                 // Again.. the same logic. Keep adding until we bump into
                 // another piece (or edge), then check if it's friendly or not.

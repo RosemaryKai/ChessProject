@@ -22,7 +22,10 @@ namespace Chess
         // METHODS of this class
         public void Update()
         {
-
+            if (piece.IsCaptured)
+            {
+                transform.position = new Vector3(0, 0, 0.2f);
+            }
         }
 
     }

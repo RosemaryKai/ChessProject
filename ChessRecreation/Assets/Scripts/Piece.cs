@@ -39,9 +39,10 @@ namespace Chess
         /// <summary> 
         /// If the piece is captured or not. 
         /// </summary> 
-        public bool IsCaputed 
+        public bool IsCaptured 
         { 
             get { return isCaptured; }
+            set { isCaptured = value; }
         }
         /// <summary>
         /// The location of the piece.
