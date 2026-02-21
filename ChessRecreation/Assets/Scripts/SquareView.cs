@@ -22,13 +22,12 @@ namespace Chess
         public Square Square
         {
             get { return square; }
+            set { square = value; }
         }
-        // AWAKE of this class
+        // METHODS of this class
         public void Awake()
         {
 
         }
-
-        // METHODS of this class
     }
 }

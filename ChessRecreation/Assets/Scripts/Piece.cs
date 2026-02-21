@@ -12,6 +12,17 @@ namespace Chess
         White,
         Black 
     } 
+
+    // An enumeration for the pieces of chess.
+    public enum PieceType
+    {
+        Pawn,
+        Rook,
+        Knight,
+        Bishop,
+        Queen,
+        King
+    }
     /// <summary> 
     /// A piece on the chess board.
     /// </summary> 
@@ -21,6 +32,7 @@ namespace Chess
         protected Square location; 
         protected bool isCaptured;
         protected PieceColor color;
+        protected PieceType pieceType;
         protected bool hasMoved;
 
         // PROPERTIES of this class 
@@ -47,6 +59,11 @@ namespace Chess
             get { return color; }
         }
 
+        public PieceType PieceType
+        {
+            get { return pieceType; }
+        }
+
         // CTORS of this class 
         public Piece(Square startingLocation, PieceColor color)
         { 
@@ -62,5 +79,10 @@ namespace Chess
         /// </summary>
         /// <returns>A list of squares the piece could see.</returns>
         public abstract List<Square> Vision(Board board);
+
+        public override string ToString()
+        {
+            return $"{color} {pieceType}; {location}";
+        }
     }
 }

@@ -84,15 +84,25 @@ namespace Chess
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    // TODO: Add once piece logic is actually created.
+                    if((j == 0 || j == 7) && i == 0)
+                    {
+                        Rook newRook = new Rook(board[j, i], PieceColor.White);
+                        pieces.Add(newRook);
+                        board[j, i].Piece = newRook;
+                    }
                 }
             }
             // Insantiation of the Black Pieces.
-            for (int i = 8; i > 6; i--)
+            for (int i = 7; i > 5; i--)
             {
                 for (int j = 0; j < 8; j++)
                 {
-                    // TODO: Add once piece logic is actually created.
+                    if ((j == 0 || j == 7) && i == 7)
+                    {
+                        Rook newRook = new Rook(board[j, i], PieceColor.Black);
+                        pieces.Add(newRook);
+                        board[j, i].Piece = newRook;
+                    }
                 }
             }
         }

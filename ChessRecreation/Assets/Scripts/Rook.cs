@@ -17,7 +17,10 @@ namespace Chess
 
 
         // PROPERTIES of this class
-
+        public bool CanCastle
+        {
+            get { return hasMoved; }
+        }
 
         // CTORs of this class
         /// <summary>
@@ -29,6 +32,7 @@ namespace Chess
             base(location, color)
         {
             // The base class mostly handles instantiation.
+            pieceType = PieceType.Rook;
         }
 
         // METHODS of this class
@@ -126,6 +130,11 @@ namespace Chess
 
             // Finally, return the list of squares the rook can see!
             return seenSquares;
+        }
+
+        public override string ToString()
+        {
+            return $"{color} Rook; {location}";
         }
     }
 }
