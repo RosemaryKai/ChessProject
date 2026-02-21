@@ -20,7 +20,7 @@ namespace Chess
         // FIELDS of this class
         protected Square location; 
         protected bool isCaptured;
-        private PieceColor color;
+        protected PieceColor color;
         protected bool hasMoved;
 
         // PROPERTIES of this class 
@@ -31,11 +31,20 @@ namespace Chess
         { 
             get { return isCaptured; }
         }
-
+        /// <summary>
+        /// The location of the piece.
+        /// </summary>
         public Square Location
         {
             get { return location; }
             set { location = value; }
+        }
+        /// <summary>
+        /// Read-Only property for the color of the piece.
+        /// </summary>
+        public PieceColor Color
+        {
+            get { return color; }
         }
 
         // CTORS of this class 
@@ -52,6 +61,6 @@ namespace Chess
         /// What a piece could see if they were not blocked.
         /// </summary>
         /// <returns>A list of squares the piece could see.</returns>
-        public abstract List<Square> UnblockedVision(Board board);
+        public abstract List<Square> Vision(Board board);
     }
 }

@@ -24,6 +24,21 @@ namespace Chess
             get { return pieces.Count; }
         }
         /// <summary>
+        /// Read-Only property for the ranks of the board.
+        /// </summary>
+        public int Ranks
+        {
+            get { return board.GetLength(0); }
+        }
+        /// <summary>
+        /// Read-Only proeprty for the files of the board.
+        /// </summary>
+        public int Files
+        {
+            get { return board.GetLength(1); }
+        }
+
+        /// <summary>
         /// Indexer for squares of the board.
         /// </summary>
         /// <param name="x"></param>

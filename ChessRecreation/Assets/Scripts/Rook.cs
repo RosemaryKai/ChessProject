@@ -3,10 +3,14 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 using UnityEngine.UIElements;
 
 namespace Chess
 {
+    /// <summary>
+    /// The Rook - the piece that moves up, down, left, and right.
+    /// </summary>
     internal class Rook : Piece
     {
         // FIELDS of this class
@@ -16,6 +20,11 @@ namespace Chess
 
 
         // CTORs of this class
+        /// <summary>
+        /// Creation of a new rook.
+        /// </summary>
+        /// <param name="location">The square the rook is on.</param>
+        /// <param name="color">The color of the rook.</param>
         public Rook(Square location, PieceColor color) :
             base(location, color)
         {
@@ -28,29 +37,94 @@ namespace Chess
         /// </summary>
         /// <param name="board">The board the piece is on.</param>
         /// <returns></returns>
-        public override List<Square> UnblockedVision(Board board)
+        public override List<Square> Vision(Board board)
         {
-            List<Square> seenSquares = new List<Square>(0);
-            // Add squares to the right.
-            for (int i = location.X + 1; i < 8; i++)
+            List<Square> seenSquares = new List<Square>();
+
+            // = = = = = = = RIGHT SQUARES = = = = = = = 
+            // Moving right from the current location of the rook to
+            // add the squares it can see to the list.
+            for (int i = location.Rank + 1; i < board.Ranks; i++)
             {
-                seenSquares.Add(board[i, location.Y]);
+                // Save the current square- mainly for readability.
+
+                Square currentSquare = board[i, location.File];
+                if (!currentSquare.IsOccupied)
+                    seenSquares.Add(currentSquare);
+
+                // If the piece on the occupied square is the same color as this rook,
+                // do not include the square. The rook cannot capture its own color.
+                else if(currentSquare.Piece.Color == color)
+                    break;
+
+                // If it's not, include the square. That's an enemy piece and it can
+                // be captured.
+                else
+                {
+                    seenSquares.Add(currentSquare);
+                    break;
+                }
             }
-            // Now squares to the left.
-            for (int i = location.X - 1; i >= 0; i--)
+
+            // = = = = = = = LEFT SQUARES = = = = = = = 
+            // Moving left from the current location of the rook to
+            // add the squares it can see to the list.
+            for (int i = location.Rank - 1; i >= 0; i--)
             {
-                seenSquares.Add(board[i, location.Y]);
+                Square currentSquare = board[i, location.File];
+
+                if (!currentSquare.IsOccupied)
+                    seenSquares.Add(currentSquare);
+                // Same logic- same color pieces cannot capture each other.
+                else if (currentSquare.Piece.Color == color)
+                    break;
+                else
+                {
+                    seenSquares.Add(currentSquare);
+                    break;
+                }
             }
-            // Now squares above...
-            for (int i = location.Y + 1; i < 8; i++)
+
+            // = = = = = = = UP SQUARES = = = = = = = 
+            // Moving up from the current location of the rook to
+            // add the squares it can see to the list.
+            for (int i = location.File + 1; i < board.Files; i++)
             {
-                seenSquares.Add(board[location.X, i]);
+                Square currentSquare = board[location.Rank, i];
+
+                // Same logic for squares- nothing new. Add enemy occupied squares,
+                // do not add friendly occupied squares.
+                if (!currentSquare.IsOccupied)
+                    seenSquares.Add(currentSquare);
+                else if (currentSquare.Piece.Color == color)
+                    break;
+                else
+                {
+                    seenSquares.Add(currentSquare);
+                    break;
+                }
             }
-            // Now the squares below.
-            for (int i = location.Y - 1; i >= 0; i--)
+            // = = = = = = = DOWN SQUARES = = = = = = = 
+            // Moving down from the current location of the rook to
+            // add the squares it can see to the list.
+            for (int i = location.File - 1; i >= 0; i--)
             {
-                seenSquares.Add(board[location.X, i]);
+                Square currentSquare = board[location.Rank, i];
+
+                // Again.. the same logic. Keep adding until we bump into
+                // another piece (or edge), then check if it's friendly or not.
+                if (!currentSquare.IsOccupied)
+                    seenSquares.Add(currentSquare);
+                else if (currentSquare.Piece.Color == color)
+                    break;
+                else
+                {
+                    seenSquares.Add(currentSquare);
+                    break;
+                }
             }
+
+            // Finally, return the list of squares the rook can see!
             return seenSquares;
         }
     }

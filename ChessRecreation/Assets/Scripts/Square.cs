@@ -23,16 +23,23 @@ namespace Chess
         /// <summary>
         /// The X-Value of the square.
         /// </summary>
-        public int X
+        public int Rank
         {
             get { return x; }
         }
         /// <summary>
         /// The Y-Value of the square.
         /// </summary>
-        public int Y
+        public int File
         {
             get { return y; }
+        }
+        /// <summary>
+        /// Property for the piece on the square.
+        /// </summary>
+        public Piece Piece
+        {
+            get { return piece; }
         }
         // CTORS of this class
         public Square(int x, int y)
@@ -47,7 +54,7 @@ namespace Chess
         /// <param name="x">The number on the x-axis.</param> 
         /// <returns>The letter it was converted to.</returns> 
         /// <exception cref="IndexOutOfRangeException">If the board is larger than 8x8.</exception> 
-        private char XAxisConversion(int x) 
+        private char YAxisConversion(int y) 
         { 
             char letter; 
             // Determines which X value will be mapped to a letter on the chess board.
@@ -88,7 +95,7 @@ namespace Chess
         /// <returns>The squares coordinates as a string.</returns>
         public override string ToString() 
         { 
-            return $"{XAxisConversion(x)}, {y}";
+            return $"{YAxisConversion(y)}, {x}";
         }
     }
 }
