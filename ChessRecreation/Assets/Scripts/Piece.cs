@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Chess
 {
@@ -29,6 +30,7 @@ namespace Chess
     internal abstract class Piece 
     {
         // FIELDS of this class
+        protected int value;
         protected Square location; 
         protected bool isCaptured;
         protected PieceColor color;
@@ -59,10 +61,19 @@ namespace Chess
         {
             get { return color; }
         }
-
+        /// <summary>
+        /// Read-Only property for the piece's type.
+        /// </summary>
         public PieceType PieceType
         {
             get { return pieceType; }
+        }
+        /// <summary>
+        /// Read-Only property for the value of a piece.
+        /// </summary>
+        public int Value
+        {
+            get { return value; }
         }
 
         // CTORS of this class 
@@ -84,6 +95,111 @@ namespace Chess
         public override string ToString()
         {
             return $"{color} {pieceType}; {location}";
+        }
+
+        protected List<Square>GetDirection(int fileStep, int rankStep, Board board)
+        {
+            // Make sure the piece is actually taking steps.
+            // If it's not? Throw an exception.
+            if(fileStep == 0 && rankStep == 0)
+            {
+                throw new Exception("ERROR: Both steps cannot be zero.");
+            }
+
+            // Create a new list of squares to be returned.
+            List<Square> squares = new List<Square>();
+
+            // Also create a current square variable, starting at the piece's location.
+            // We mainly need it to get its values.
+            Square currentSquare = location;
+            int currentFile = currentSquare.File;
+            int currentRank = currentSquare.Rank;
+
+            // First deal with diagonals.
+            if(rankStep != 0 && fileStep != 0)
+            {
+                // Keep adding until we cannot anymore!!!
+                while(currentSquare.Rank + rankStep >= 0 && currentSquare.Rank + rankStep < board.Ranks
+                    && currentSquare.File + fileStep >= 0 && currentSquare.File + fileStep < board.Files)
+                {
+                    // Increment based on the values we're given.
+                    currentRank += rankStep;
+                    currentFile += fileStep;
+                    // Then find that square, and add it to the list.
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // If it is occupied, but there's a friendly piece there? Don't add it.
+                    else if (currentSquare.Piece.Color == color)
+                        break;
+                    // If there's an enemy piece there? Add it, but stop.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+                // Finally, return the list.
+                return squares;
+            }
+
+            // Now begin to add the squares based on the direction asked for.
+            // We'll deal with files next...
+            if(fileStep != 0)
+            {
+                while (currentFile + fileStep < board.Files && currentFile + fileStep >= 0)
+                {
+                    currentFile += fileStep;
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // If it is occupied, but there's a friendly piece there? Don't add it.
+                    else if (currentSquare.Piece.Color == color)
+                        break;
+                    // If there's an enemy piece there? Add it, but stop.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+            }
+            
+            // Now deal with ranks.
+            if(rankStep != 0)
+            {
+                while(currentRank + rankStep < board.Ranks && currentRank + rankStep >= 0)
+                {
+                    currentRank += rankStep;
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // If it is occupied, but there's a friendly piece there? Don't add it.
+                    else if (currentSquare.Piece.Color == color)
+                        break;
+                    // If there's an enemy piece there? Add it, but stop.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+            }
+            
+            // Return the list of squares.
+            return squares;
         }
     }
 }

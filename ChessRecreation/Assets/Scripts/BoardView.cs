@@ -16,17 +16,21 @@ namespace Chess
         // FIELDS of this class
         private Board board;
 
-        // Second field to prevent the debug window from flooding.
         private Piece selectedPiece;
         private Piece previouslySelectedPiece;
 
-        // Dictionaries for movement!
+        private List<GameObject> activeHighlights;
+
+        // Dictionaries for matching pieces/squares to their MonoBehaviour scripts!
         private Dictionary<Piece, PieceView> pieceViews;
         private Dictionary<Square, SquareView> squareViews;
 
+        // Objects and fields required from Unity.
         [SerializeField] private GameObject squarePrefab;
         [SerializeField] private GameObject whiteRookPrefab;
         [SerializeField] private GameObject blackRookPrefab;
+        [SerializeField] private GameObject highlightPrefab;
+        [SerializeField] private GameObject pieceHighlightPrefab;
         [SerializeField] private Material darkSquare;
         [SerializeField] private Material lightSquare;
         [SerializeField] private Transform boardParent;
@@ -37,9 +41,10 @@ namespace Chess
             // Create a new Board object.
             board = new Board();
 
-            // Instantiate the dictionary.
+            // Instantiate the dictionaries & list.
             pieceViews = new Dictionary<Piece, PieceView>();
             squareViews = new Dictionary<Square, SquareView>();
+            activeHighlights = new List<GameObject>();
 
             // Now create a variable to store the color of the square.
             Material color;
@@ -127,13 +132,18 @@ namespace Chess
             {
                 OnClick();
             }
-            // If a a piece was selected, print it to the debug window.
+            // If a a piece was recently selected, print it to the debug window.
             if (selectedPiece != null && previouslySelectedPiece != selectedPiece)
             {
                 Debug.Log("Selected Piece: " + selectedPiece);
                 previouslySelectedPiece = selectedPiece;
             }
-
+            // If there is no piece selected, clear highlighted squares.
+            if (selectedPiece == null)
+            {
+                ClearHighlights();
+            }
+            
         }
         /// <summary>
         /// Clicking on GameObjects, for moving.
@@ -168,6 +178,10 @@ namespace Chess
                         if(pieceView.Piece.Color == selectedPiece.Color)
                         {
                             selectedPiece = pieceView.Piece;
+
+                            // Also update the highlights to match!
+                            ClearHighlights();
+                            HighlightMoves(selectedPiece);
                             return;
                         }
                         // if it's not? It's an enemy- we capture it.
@@ -175,7 +189,20 @@ namespace Chess
                         {
                             // Capture it using logic in the Board class.
                             bool capture = board.TryCapture(selectedPiece, square, pieceViews, squareViews);
+
+                            // If the capture was succesful, move the selected piece.
+                            if (capture)
+                            {
+                                // Now visually move that piece to the formerly occupied square.
+                                pieceView = pieceViews[selectedPiece];        // Grab the PieceView of the piece.
+                                squareView = squareViews[square];             // Grab the SquareView of the square.
+                                pieceView.transform.position = squareView.transform.position +
+                                    new UnityEngine.Vector3(0, 0, -0.1f);     // Move the piece prefab to that square.
+                            }
                             Debug.Log($"Did it capture? {capture}");
+
+                            // No matter what, nullify the selected piece.
+                            selectedPiece = null;
                         }
                     }
                     // If we don't have a selected piece? Select the piece we clicked on. 
@@ -183,6 +210,7 @@ namespace Chess
                     {
                         Debug.Log($"{pieceView.Piece}");
                         selectedPiece = pieceView.Piece;
+                        HighlightMoves(selectedPiece);
                         return;
                     }
                 }
@@ -221,6 +249,66 @@ namespace Chess
                         return;
                 }
             }
+        }
+
+        public void HighlightMoves(Piece piece)
+        {
+            // If the piece sent in is null, immediately exit the method.
+            if(piece == null)
+            {
+                return;
+            }
+
+            // Now get the list of squares that the piece can see.
+            List<Square> vision = piece.Vision(board);
+
+            // Now that we have the piece's vision, we need to instantiate highlights
+            // on those squares.
+            // To do that, we need the position of said squares- we can access that
+            // using its SquareView from the dictionary.
+            for (int i = 0; i < vision.Count; i++)
+            {
+                GameObject highlight;
+                // If the square is empty, use the empty square highlight.
+                if (!vision[i].IsOccupied)
+                {
+                    highlight = Instantiate(highlightPrefab,
+                        new Vector3(vision[i].File, vision[i].Rank, -0.1f),
+                        new Quaternion(),
+                        squareViews[vision[i]].transform);
+
+                    // Add the highlight to the list.
+                    activeHighlights.Add(highlight);
+                }
+                // If the piece occupying the square is the color of the one selected?
+                // Do NOT highlight the square.
+                else if (vision[i].Piece.Color == piece.Color)
+                {
+                    continue;
+                }
+                // If the piece is an enemy piece? Highlight that square, but with
+                // a different prefab.
+                else
+                {
+                    highlight = Instantiate(pieceHighlightPrefab,
+                        new Vector3(vision[i].File, vision[i].Rank, -0.3f),
+                        new Quaternion(),
+                        squareViews[vision[i]].transform);
+
+                    // Add the highlight to the list.
+                    activeHighlights.Add(highlight);
+                }
+
+            }
+        }
+
+        public void ClearHighlights()
+        {
+            for (int i = 0; i < activeHighlights.Count; i++)
+            {
+                Destroy(activeHighlights[i]);
+            }
+            activeHighlights.Clear();
         }
 
     }

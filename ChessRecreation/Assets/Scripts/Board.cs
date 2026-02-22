@@ -198,12 +198,6 @@ namespace Chess
             // Now, we'll technically move the piece to that square.
             TryMove(piece, square);
 
-            // Now visually move that piece to the formerly occupied square.
-            PieceView pieceView = pieceViews[piece];        // Grab the PieceView of the piece.
-            SquareView squareView = squareViews[square];    // Grab the SquareView of the square.
-            pieceView.transform.position = squareView.transform.position +
-                new UnityEngine.Vector3(0, 0, -0.1f);       // Move the piece prefab to that square.
-
             // Return true, as the capture has succeeded.
             return true;
         }
