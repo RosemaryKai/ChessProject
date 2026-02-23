@@ -47,7 +47,8 @@ namespace Chess
         /// <returns></returns>
         public Square this[int x, int y]
         {
-            get {
+            get 
+            {
                 if(x >= board.GetLength(0) || x < 0 ||
                     y >= board.GetLength(1) || y < 0)
                 {
@@ -58,7 +59,7 @@ namespace Chess
                 {
                     return board[x, y];
                 }
-                }
+            }
         }
 
         // CTORs of this class
@@ -88,11 +89,51 @@ namespace Chess
             {
                 for (int j = 0; j < 8; j++)
                 {
+                    // WHITE PAWNS
+                    if(i == 1)
+                    {
+                        Pawn newPawn = new Pawn(board[j, i], PieceColor.White);
+                        pieces.Add(newPawn);
+                        board[j, i].Piece = newPawn;
+                    }
+                    // WHITE ROOKS
                     if((j == 0 || j == 7) && i == 0)
                     {
                         Rook newRook = new Rook(board[j, i], PieceColor.White);
                         pieces.Add(newRook);
                         board[j, i].Piece = newRook;
+                    }
+
+                    // WHITE BISHOPS
+                    if((j == 2 || j == 5) && i == 0)
+                    {
+                        Bishop newBishop = new Bishop(board[j, i], PieceColor.White);
+                        pieces.Add(newBishop);
+                        board[j, i].Piece = newBishop;
+                    }
+
+                    // WHITE KNIGHTS
+                    if ((j == 1 || j == 6) && i == 0)
+                    {
+                        Knight newKnight = new Knight(board[j, i], PieceColor.White);
+                        pieces.Add(newKnight);
+                        board[j, i].Piece = newKnight;
+                    }
+
+                    // WHITE QUEEN
+                    if (j == 3 && i == 0)
+                    {
+                        Queen newQueen = new Queen(board[j, i], PieceColor.White);
+                        pieces.Add(newQueen);
+                        board[j, i].Piece = newQueen;
+                    }
+
+                    // WHITE KING
+                    if (j == 4 && i == 0)
+                    {
+                        King newKing = new King(board[j, i], PieceColor.White);
+                        pieces.Add(newKing);
+                        board[j, i].Piece = newKing;
                     }
                 }
             }
@@ -101,11 +142,51 @@ namespace Chess
             {
                 for (int j = 0; j < 8; j++)
                 {
+                    // BLACK PAWNS
+                    if (i == 6)
+                    {
+                        Pawn newPawn = new Pawn(board[j, i], PieceColor.Black);
+                        pieces.Add(newPawn);
+                        board[j, i].Piece = newPawn;
+                    }
+                    // BLACK ROOKS
                     if ((j == 0 || j == 7) && i == 7)
                     {
                         Rook newRook = new Rook(board[j, i], PieceColor.Black);
                         pieces.Add(newRook);
                         board[j, i].Piece = newRook;
+                    }
+
+                    // BLACK BISHOPS
+                    if ((j == 2 || j == 5) && i == 7)
+                    {
+                        Bishop newBishop = new Bishop(board[j, i], PieceColor.Black);
+                        pieces.Add(newBishop);
+                        board[j, i].Piece = newBishop;
+                    }
+
+                    // BLACK KNIGHTS
+                    if ((j == 1 || j == 6) && i == 7)
+                    {
+                        Knight newKnight = new Knight(board[j, i], PieceColor.Black);
+                        pieces.Add(newKnight);
+                        board[j, i].Piece = newKnight;
+                    }
+
+                    // BLACK QUEEN
+                    if (j == 3 && i == 7)
+                    {
+                        Queen newQueen = new Queen(board[j, i], PieceColor.Black);
+                        pieces.Add(newQueen);
+                        board[j, i].Piece = newQueen;
+                    }
+
+                    // BLACK KING
+                    if (j == 4 && i == 7)
+                    {
+                        King newKing = new King(board[j, i], PieceColor.Black);
+                        pieces.Add(newKing);
+                        board[j, i].Piece = newKing;
                     }
                 }
             }
@@ -127,7 +208,20 @@ namespace Chess
             }
 
             // Get the piece's vision of squares.
-            List<Square> squares = piece.Vision(this);
+            List<Square> squares = piece.Move(this);
+
+            // If they're pawns, try to get their attacking squares.
+            if (piece is Pawn)
+            {
+                List<Square> pawnAttacks = piece.Attack(this);
+                if (pawnAttacks.Count > 0)
+                {
+                    for (int i = 0; i < pawnAttacks.Count; i++)
+                    {
+                        squares.Add(pawnAttacks[i]);
+                    }
+                }
+            }
 
             // Iterate through the piece's vision. 
             for (int i = 0; i < squares.Count; i++)
@@ -172,13 +266,16 @@ namespace Chess
 
             return true;
         }
-
-        public bool TryCapture(Piece piece, Square square,
-            Dictionary<Piece, PieceView> pieceViews, Dictionary<Square, SquareView> squareViews)
+        /// <summary>
+        /// Attempts a capture on a square.
+        /// </summary>
+        /// <param name="piece">The piece moving.</param>
+        /// <param name="square">The square the capture is happening on.</param>
+        /// <returns>If the capture can happen or not.</returns>
+        public bool TryCapture(Piece piece, Square square)
         {
             // First make sure nothing is null. If anything is null, we can't do anything.
-            if(piece == null ||square == null ||
-                pieceViews == null || squareViews == null)
+            if(piece == null ||square == null)
             {
                 return false;
             }
@@ -192,11 +289,13 @@ namespace Chess
             // With all of that out of the way, we can move on to captures.
             // First, let's set the piece on the target square to captured.
             square.Piece.IsCaptured = true;     // This will disable it, making it invisible.
-            square.Piece = null;                // Make the square's piece null as well,
-                                                // making room for the next one.
+            Piece formerPiece = square.Piece;   // Will need this for later!
 
             // Now, we'll technically move the piece to that square.
             TryMove(piece, square);
+
+            // After that, clear that Piece's data. It no longer exists on the board.
+            formerPiece.Location = null;
 
             // Return true, as the capture has succeeded.
             return true;

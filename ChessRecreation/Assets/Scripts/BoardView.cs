@@ -25,21 +25,38 @@ namespace Chess
         private Dictionary<Piece, PieceView> pieceViews;
         private Dictionary<Square, SquareView> squareViews;
 
+        // Rotation for the camera.
+        [SerializeField] private Camera camera;
+
         // Objects and fields required from Unity.
+        // Prefabs for the board.
         [SerializeField] private GameObject squarePrefab;
         [SerializeField] private GameObject whiteRookPrefab;
         [SerializeField] private GameObject blackRookPrefab;
+        [SerializeField] private GameObject whiteBishopPrefab;
+        [SerializeField] private GameObject blackBishopPrefab;
+        [SerializeField] private GameObject whiteKnightPrefab;
+        [SerializeField] private GameObject blackKnightPrefab;
+        [SerializeField] private GameObject whiteQueenPrefab;
+        [SerializeField] private GameObject blackQueenPrefab;
+        [SerializeField] private GameObject whitePawnPrefab;
+        [SerializeField] private GameObject blackPawnPrefab;
+        [SerializeField] private GameObject whiteKingPrefab;
+        [SerializeField] private GameObject blackKingPrefab;
         [SerializeField] private GameObject highlightPrefab;
         [SerializeField] private GameObject pieceHighlightPrefab;
+
+        // Now other data for the game.
         [SerializeField] private Material darkSquare;
         [SerializeField] private Material lightSquare;
         [SerializeField] private Transform boardParent;
 
         // METHODS of this class
-        public void Awake() 
+        public void Start() 
         { 
             // Create a new Board object.
             board = new Board();
+            Quaternion rotation = camera.transform.rotation;
 
             // Instantiate the dictionaries & list.
             pieceViews = new Dictionary<Piece, PieceView>();
@@ -54,6 +71,7 @@ namespace Chess
             {
                 for (int f = 0; f < board.Files; f++)
                 {
+                    #region squareInstantiation
                     // SQUARE INSTANTIATION
                     // Even squares are dark.
                     if ((r + f) % 2 == 0)
@@ -83,7 +101,8 @@ namespace Chess
 
                     // Now add that square and squareview to the dictionary.
                     squareViews.Add(sView.Square, sView);
-
+                    #endregion
+                    #region pieceInstantiation
                     // PIECE INSTANTIATION
                     // If there's a piece on the square...
                     if (sView.Square.IsOccupied)
@@ -92,6 +111,7 @@ namespace Chess
                         Piece piece = sView.Square.Piece;
                         GameObject newPiece;
 
+                        #region Rooks
                         // ROOK INSTANTIATION
                         if (piece is Rook)
                         {
@@ -100,14 +120,14 @@ namespace Chess
                             {
                                 newPiece = Instantiate(whiteRookPrefab,     // Prefab for the rook
                                 new Vector3(r, f, -0.1f),                   // Rooks location
-                                new Quaternion(),                           // Rooks rotation (0)
+                                rotation,                                   // Rooks rotation
                                 boardParent);                               // Rooks transform parent
                             }
                             else
                             {
                                 newPiece = Instantiate(blackRookPrefab,     // Prefab for the rook
                                 new Vector3(r, f, -0.1f),                   // Rooks location
-                                new Quaternion(),                           // Rooks rotation (0)
+                                rotation,                                   // Rooks rotation
                                 boardParent);                               // Rooks transform parent
                             }
 
@@ -120,7 +140,154 @@ namespace Chess
                             // Finally, add that piece and its pieceview to the dictionary.
                             pieceViews.Add(pView.Piece, pView);
                         }
+                        #endregion
+                        #region Bishops
+                        // BISHOP INSTANTIATION
+                        else if (piece is Bishop)
+                        {
+                            // Determine the color of the bishop, assigning it its prefab.
+                            if(piece.Color == PieceColor.White)
+                            {
+                                newPiece = Instantiate(whiteBishopPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            else
+                            {
+                                newPiece = Instantiate(blackBishopPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            // Now get the component of the piece- and assign its piece to itself.
+                            // Also make it active so it can be seen!
+                            PieceView pView = newPiece.GetComponent<PieceView>();
+                            pView.Piece = sView.Square.Piece;
+                            newPiece.SetActive(true);
+
+                            // Finally, add that piece and its pieceview to the dictionary.
+                            pieceViews.Add(pView.Piece, pView);
+                        }
+                        #endregion
+                        #region Knights
+                        // KNIGHT INSTANTIATION
+                        else if(piece is Knight)
+                        {
+                            // Determine the color of the knight, assigning it its prefab.
+                            if (piece.Color == PieceColor.White)
+                            {
+                                newPiece = Instantiate(whiteKnightPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            else
+                            {
+                                newPiece = Instantiate(blackKnightPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            // Now get the component of the piece- and assign its piece to itself.
+                            // Also make it active so it can be seen!
+                            PieceView pView = newPiece.GetComponent<PieceView>();
+                            pView.Piece = sView.Square.Piece;
+                            newPiece.SetActive(true);
+
+                            // Finally, add that piece and its pieceview to the dictionary.
+                            pieceViews.Add(pView.Piece, pView);
+                        }
+                        #endregion
+                        #region Queens
+                        // QUEEN INSTANTIATION
+                        else if (piece is Queen)
+                        {
+                            // Determine the color of the queen, assigning it its prefab.
+                            if (piece.Color == PieceColor.White)
+                            {
+                                newPiece = Instantiate(whiteQueenPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            else
+                            {
+                                newPiece = Instantiate(blackQueenPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            // Now get the component of the piece- and assign its piece to itself.
+                            // Also make it active so it can be seen!
+                            PieceView pView = newPiece.GetComponent<PieceView>();
+                            pView.Piece = sView.Square.Piece;
+                            newPiece.SetActive(true);
+
+                            // Finally, add that piece and its pieceview to the dictionary.
+                            pieceViews.Add(pView.Piece, pView);
+                        }
+                        #endregion
+                        #region Kings
+                        // KING INSTANTIATION
+                        else if (piece is King)
+                        {
+                            // Determine the color of the king, assigning it its prefab.
+                            if (piece.Color == PieceColor.White)
+                            {
+                                newPiece = Instantiate(whiteKingPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            else
+                            {
+                                newPiece = Instantiate(blackKingPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            // Now get the component of the piece- and assign its piece to itself.
+                            // Also make it active so it can be seen!
+                            PieceView pView = newPiece.GetComponent<PieceView>();
+                            pView.Piece = sView.Square.Piece;
+                            newPiece.SetActive(true);
+
+                            // Finally, add that piece and its pieceview to the dictionary.
+                            pieceViews.Add(pView.Piece, pView);
+                        }
+                        #endregion
+                        #region Pawns
+                        // PAWN INSTANTIATION
+                        else if (piece is Pawn)
+                        {
+                            // Determine the color of the pawn, assigning it its prefab.
+                            if (piece.Color == PieceColor.White)
+                            {
+                                newPiece = Instantiate(whitePawnPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            else
+                            {
+                                newPiece = Instantiate(blackPawnPrefab,
+                                    new Vector3(r, f, -0.1f),
+                                    rotation,
+                                    boardParent);
+                            }
+                            // Now get the component of the piece- and assign its piece to itself.
+                            // Also make it active so it can be seen!
+                            PieceView pView = newPiece.GetComponent<PieceView>();
+                            pView.Piece = sView.Square.Piece;
+                            newPiece.SetActive(true);
+
+                            // Finally, add that piece and its pieceview to the dictionary.
+                            pieceViews.Add(pView.Piece, pView);
+                        }
+                        #endregion
                     }
+                    #endregion
                 }
             }
         }
@@ -143,7 +310,6 @@ namespace Chess
             {
                 ClearHighlights();
             }
-            
         }
         /// <summary>
         /// Clicking on GameObjects, for moving.
@@ -188,7 +354,7 @@ namespace Chess
                         else
                         {
                             // Capture it using logic in the Board class.
-                            bool capture = board.TryCapture(selectedPiece, square, pieceViews, squareViews);
+                            bool capture = board.TryCapture(selectedPiece, square);
 
                             // If the capture was succesful, move the selected piece.
                             if (capture)
@@ -236,6 +402,7 @@ namespace Chess
                             PieceView pView = pieceViews[selectedPiece];
                             pView.transform.position = squareView.transform.position
                                 + new Vector3(0, 0, -0.1f);
+                            selectedPiece.HasMoved = true;
                         }
 
                         // Finally, de-select the piece.
@@ -250,7 +417,10 @@ namespace Chess
                 }
             }
         }
-
+        /// <summary>
+        /// Highlights the possible moves of a piece.
+        /// </summary>
+        /// <param name="piece">The piece's moves being highlighted.</param>
         public void HighlightMoves(Piece piece)
         {
             // If the piece sent in is null, immediately exit the method.
@@ -260,7 +430,20 @@ namespace Chess
             }
 
             // Now get the list of squares that the piece can see.
-            List<Square> vision = piece.Vision(board);
+            List<Square> vision = piece.Move(board);
+
+            // If they're pawns, try to get their attacking squares.
+            if(piece is Pawn)
+            {
+                List<Square> pawnAttacks = piece.Attack(board);
+                if(pawnAttacks.Count > 0)
+                {
+                    for (int i = 0; i < pawnAttacks.Count; i++)
+                    {
+                        vision.Add(pawnAttacks[i]);
+                    }
+                }
+            }
 
             // Now that we have the piece's vision, we need to instantiate highlights
             // on those squares.
@@ -276,6 +459,8 @@ namespace Chess
                         new Vector3(vision[i].File, vision[i].Rank, -0.1f),
                         new Quaternion(),
                         squareViews[vision[i]].transform);
+
+                    highlight.SetActive(true);
 
                     // Add the highlight to the list.
                     activeHighlights.Add(highlight);
@@ -295,13 +480,17 @@ namespace Chess
                         new Quaternion(),
                         squareViews[vision[i]].transform);
 
+                    highlight.SetActive(true);
+
                     // Add the highlight to the list.
                     activeHighlights.Add(highlight);
                 }
 
             }
         }
-
+        /// <summary>
+        /// Clears previously instantiated highlights.
+        /// </summary>
         public void ClearHighlights()
         {
             for (int i = 0; i < activeHighlights.Count; i++)

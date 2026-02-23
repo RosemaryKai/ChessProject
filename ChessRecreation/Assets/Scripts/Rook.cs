@@ -9,7 +9,7 @@ using UnityEngine.UIElements;
 namespace Chess
 {
     /// <summary>
-    /// The Rook - the piece that moves up, down, left, and right.
+    /// The major piece that attacks in all four cardinal directions.
     /// </summary>
     internal class Rook : Piece
     {
@@ -17,6 +17,9 @@ namespace Chess
 
 
         // PROPERTIES of this class
+        /// <summary>
+        /// If this rook can castle with the king.
+        /// </summary>
         public bool CanCastle
         {
             get { return hasMoved; }
@@ -42,7 +45,7 @@ namespace Chess
         /// </summary>
         /// <param name="board">The board the piece is on.</param>
         /// <returns></returns>
-        public override List<Square> Vision(Board board)
+        public override List<Square> Move(Board board)
         {
             List<Square> seenSquares = new List<Square>();
             List<Square> newSquares = new List<Square>();
@@ -80,10 +83,14 @@ namespace Chess
             // Finally, return the list of squares the rook can see!
             return seenSquares;
         }
-
-        public override string ToString()
+        /// <summary>
+        /// The squares the Rook attacks.
+        /// </summary>
+        /// <param name="board">The board.</param>
+        /// <returns>A list of squares attacked by the Rook.</returns>
+        public override List<Square> Attack(Board board)
         {
-            return $"{color} Rook; {location}";
+            return Move(board);
         }
     }
 }

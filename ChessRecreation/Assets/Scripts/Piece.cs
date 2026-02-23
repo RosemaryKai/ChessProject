@@ -75,6 +75,14 @@ namespace Chess
         {
             get { return value; }
         }
+        /// <summary>
+        /// If the piece has moved or not.
+        /// </summary>
+        public bool HasMoved
+        {
+            get { return hasMoved; }
+            set { hasMoved = value; }
+        }
 
         // CTORS of this class 
         public Piece(Square startingLocation, PieceColor color)
@@ -90,14 +98,23 @@ namespace Chess
         /// What a piece could see if they were not blocked.
         /// </summary>
         /// <returns>A list of squares the piece could see.</returns>
-        public abstract List<Square> Vision(Board board);
+        public abstract List<Square> Move(Board board);
+
+        public abstract List<Square> Attack(Board board);
 
         public override string ToString()
         {
             return $"{color} {pieceType}; {location}";
         }
-
-        protected List<Square>GetDirection(int fileStep, int rankStep, Board board)
+        /// <summary>
+        /// Draws a raycast through squares with a given direction.
+        /// </summary>
+        /// <param name="rankStep">How far we step in the ranks.</param>
+        /// <param name="fileStep">How far we step in the files.</param>
+        /// <param name="board">The board.</param>
+        /// <returns>A list of the squares.</returns>
+        /// <exception cref="Exception">If rank & file are both zero.</exception>
+        protected List<Square>GetDirection(int rankStep, int fileStep, Board board)
         {
             // Make sure the piece is actually taking steps.
             // If it's not? Throw an exception.
@@ -197,7 +214,6 @@ namespace Chess
                     }
                 }
             }
-            
             // Return the list of squares.
             return squares;
         }

@@ -45,6 +45,13 @@ namespace Chess
             get { return piece; }
             set { piece = value; }
         }
+        /// <summary>
+        /// The name of a square, made by naming its file then rank (ex: A1).
+        /// </summary>
+        public string Name
+        {
+            get { return ToString(); }
+        }
         // CTORS of this class
         public Square(int x, int y)
         { 
