@@ -30,7 +30,7 @@ namespace Chess
         {
             if (piece.IsCaptured || piece.Location == null)
             {
-                transform.position = new Vector3(0, 0, 0.2f);
+                transform.position = new Vector3(0, 0, 2f);
             }
         }
 

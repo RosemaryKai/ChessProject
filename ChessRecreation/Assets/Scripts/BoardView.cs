@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -14,12 +15,16 @@ namespace Chess
     internal class BoardView : MonoBehaviour
     {
         // FIELDS of this class
+        // The board the game is taking place on!
         private Board board;
 
+        // The pieces..
         private Piece selectedPiece;
         private Piece previouslySelectedPiece;
 
+        // For highlights!
         private List<GameObject> activeHighlights;
+        private List<GameObject> activeSquareHighlights;
 
         // Dictionaries for matching pieces/squares to their MonoBehaviour scripts!
         private Dictionary<Piece, PieceView> pieceViews;
@@ -29,7 +34,7 @@ namespace Chess
         [SerializeField] private Camera camera;
 
         // Objects and fields required from Unity.
-        // Prefabs for the board.
+        // Prefabs for the game!
         [SerializeField] private GameObject squarePrefab;
         [SerializeField] private GameObject whiteRookPrefab;
         [SerializeField] private GameObject blackRookPrefab;
@@ -49,19 +54,36 @@ namespace Chess
         // Now other data for the game.
         [SerializeField] private Material darkSquare;
         [SerializeField] private Material lightSquare;
+        [SerializeField] private Material squareHighlight;
         [SerializeField] private Transform boardParent;
+
+        // The game manager.
+        [SerializeField] private ChessManager chessManager;
 
         // METHODS of this class
         public void Start() 
-        { 
+        {
+            // We first must read what color the player chose.
+            PieceColor choice = GameManager.Instance.PlayerChoice;
+
+            // Responding to that, we will flip the camera if they chose black.
+            if(choice == PieceColor.White)
+            {
+                camera.transform.rotation = new Quaternion();
+            }
+            else
+            {
+                camera.transform.rotation = new Quaternion(0, 0, 180, 0);
+            }
             // Create a new Board object.
             board = new Board();
             Quaternion rotation = camera.transform.rotation;
 
-            // Instantiate the dictionaries & list.
+            // Instantiate the dictionaries & lists.
             pieceViews = new Dictionary<Piece, PieceView>();
             squareViews = new Dictionary<Square, SquareView>();
             activeHighlights = new List<GameObject>();
+            activeSquareHighlights = new List<GameObject>();
 
             // Now create a variable to store the color of the square.
             Material color;
@@ -297,7 +319,11 @@ namespace Chess
             // If there's a click, enter the click method
             if (Input.GetMouseButtonDown(0))
             {
-                OnClick();
+                OnLeftClick();
+            }
+            if (Input.GetMouseButtonDown(1))
+            {
+                OnRightClick();
             }
             // If a a piece was recently selected, print it to the debug window.
             if (selectedPiece != null && previouslySelectedPiece != selectedPiece)
@@ -306,7 +332,7 @@ namespace Chess
                 previouslySelectedPiece = selectedPiece;
             }
             // If there is no piece selected, clear highlighted squares.
-            if (selectedPiece == null)
+            if (selectedPiece == null & previouslySelectedPiece != null)
             {
                 ClearHighlights();
             }
@@ -314,13 +340,16 @@ namespace Chess
         /// <summary>
         /// Clicking on GameObjects, for moving.
         /// </summary>
-        public void OnClick()
+        public void OnLeftClick()
         {
             // Create a raycast.
             Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
             // Create a pieceview and a squareview.
             SquareView squareView;
             PieceView pieceView;
+
+            // Also clear square highlights.
+            ClearSquareHighlights();
 
             // If the raycast hits something...
             if (Physics.Raycast(ray, out RaycastHit hit))
@@ -354,7 +383,7 @@ namespace Chess
                         else
                         {
                             // Capture it using logic in the Board class.
-                            bool capture = board.TryCapture(selectedPiece, square);
+                            bool capture = board.TryMove(selectedPiece, square);
 
                             // If the capture was succesful, move the selected piece.
                             if (capture)
@@ -364,6 +393,9 @@ namespace Chess
                                 squareView = squareViews[square];             // Grab the SquareView of the square.
                                 pieceView.transform.position = squareView.transform.position +
                                     new UnityEngine.Vector3(0, 0, -0.1f);     // Move the piece prefab to that square.
+
+                                // Now flip the turns.
+                                chessManager.FlipTurn();
                             }
                             Debug.Log($"Did it capture? {capture}");
 
@@ -372,7 +404,7 @@ namespace Chess
                         }
                     }
                     // If we don't have a selected piece? Select the piece we clicked on. 
-                    else
+                    else if(chessManager.Turn == pieceView.Piece.Color)
                     {
                         Debug.Log($"{pieceView.Piece}");
                         selectedPiece = pieceView.Piece;
@@ -403,6 +435,9 @@ namespace Chess
                             pView.transform.position = squareView.transform.position
                                 + new Vector3(0, 0, -0.1f);
                             selectedPiece.HasMoved = true;
+
+                            // Now flip the turns.
+                            chessManager.FlipTurn();
                         }
 
                         // Finally, de-select the piece.
@@ -414,6 +449,65 @@ namespace Chess
                         selectedPiece = null;
                     }
                         return;
+                }
+            }
+        }
+
+        public void OnRightClick()
+        {
+            // Create a raycast.
+            Ray ray = Camera.main.ScreenPointToRay(Input.mousePosition);
+            // Create a pieceview and a squareview.
+            SquareView squareView;
+            PieceView pieceView;
+
+            // If the raycast hit something...
+            if (Physics.Raycast(ray, out RaycastHit hit))
+            {
+                // Could be two things. Check for squares and pieces.
+                pieceView = hit.collider.GetComponent<PieceView>();
+                squareView = hit.collider.GetComponent<SquareView>();
+
+                // If it was a piece we hit? Get its location.
+                if(pieceView != null)
+                {
+                    Square square = pieceView.Piece.Location;
+
+                    // Now instantiate a highlight over it.
+                    GameObject newSquare = Instantiate(squarePrefab,
+                        new Vector3(square.File, square.Rank, -0.05f),
+                        new Quaternion(),
+                        boardParent);
+                    newSquare.SetActive(true);
+
+                    // Get the SpriteRenderer as well, to change the material
+                    SpriteRenderer renderer = newSquare.GetComponent<SpriteRenderer>();
+                    renderer.material = squareHighlight;
+
+                    // Then add them to the list.
+                    activeSquareHighlights.Add(newSquare);
+                }
+                // If it was a square we clicked on? That's easy.
+                else if(squareView != null)
+                {
+                    Square square = squareView.Square;
+
+                    // Instantiate a highlight over it.
+                    GameObject newSquare = Instantiate(squarePrefab,
+                        new Vector3(square.File, square.Rank, -0.05f),
+                        new Quaternion(),
+                        boardParent);
+                    newSquare.SetActive(true);
+
+                    // Get the SpriteRenderer as well, to change the material.
+                    // Also get the box collider to destroy it.
+                    SpriteRenderer renderer = newSquare.GetComponent<SpriteRenderer>();
+                    BoxCollider collider = newSquare.GetComponent<BoxCollider>();
+                    renderer.material = squareHighlight;
+                    Destroy(collider);
+
+                    // Then add them to the list.
+                    activeSquareHighlights.Add(newSquare);
                 }
             }
         }
@@ -498,6 +592,14 @@ namespace Chess
                 Destroy(activeHighlights[i]);
             }
             activeHighlights.Clear();
+        }
+        public void ClearSquareHighlights()
+        {
+            for (int i = 0; i < activeSquareHighlights.Count; i++)
+            {
+                Destroy(activeSquareHighlights[i]);
+            }
+            activeSquareHighlights.Clear();
         }
 
     }

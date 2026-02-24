@@ -743,6 +743,50 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6b99c9f2c16053b4583bcef4c4a981fa, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!1 &665621324
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 665621326}
+  - component: {fileID: 665621325}
+  m_Layer: 0
+  m_Name: ChessManager
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &665621325
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665621324}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 03c29b6c8a06ef243a1a93b06a0daf2a, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!4 &665621326
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 665621324}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0.7802073, y: 5.696701, z: 2.5814323}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &823130444
 GameObject:
   m_ObjectHideFlags: 0
@@ -2246,6 +2290,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d20096e291368fd40aa9722f8ce0ed7c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  camera: {fileID: 330585545}
   squarePrefab: {fileID: 1927078213}
   whiteRookPrefab: {fileID: 888254484}
   blackRookPrefab: {fileID: 646933715}
@@ -2263,7 +2308,9 @@ MonoBehaviour:
   pieceHighlightPrefab: {fileID: 1359594088}
   darkSquare: {fileID: 2100000, guid: 726340eca6e31754cb2bd65bd29c88a8, type: 2}
   lightSquare: {fileID: 2100000, guid: b8c592c8b2456764184d8dcd04481bce, type: 2}
+  squareHighlight: {fileID: 2100000, guid: 7c8e844103fa9ae4396c59a3db0f40b1, type: 2}
   boardParent: {fileID: 1267446889}
+  chessManager: {fileID: 665621325}
 --- !u!4 &2146260163
 Transform:
   m_ObjectHideFlags: 0
@@ -2303,3 +2350,4 @@ SceneRoots:
   - {fileID: 1751125743}
   - {fileID: 1693628722}
   - {fileID: 1630009458}
+  - {fileID: 665621326}

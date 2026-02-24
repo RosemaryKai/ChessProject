@@ -217,5 +217,13 @@ namespace Chess
             // Return the list of squares.
             return squares;
         }
+        /// <summary>
+        /// Sets a pieces values when it's captured.
+        /// </summary>
+        public void Captured()
+        {
+            isCaptured = true;
+            location = null;
+        }
     }
 }

@@ -259,45 +259,17 @@ namespace Chess
             }
 
             // Now if we made it down here, that means the move is possible.
+            // Let's check if we're moving to a square occupied by an enemy.
+            if(square.Piece != null && square.Piece.Color != piece.Color)          // We'll try to capture the piece.
+            {
+                Piece capturedPiece = square.Piece;
+                capturedPiece.Captured();
+            }
             // So update the piece's location to match.
-            piece.Location.Piece = null;
-            piece.Location = square;
-            square.Piece = piece;
+            piece.Location.Piece = null;                // Sets the piece's current location to null.
+            piece.Location = square;                    // Sets the piece's location to the square.
+            square.Piece = piece;                       // Sets the square's piece to that piece.
 
-            return true;
-        }
-        /// <summary>
-        /// Attempts a capture on a square.
-        /// </summary>
-        /// <param name="piece">The piece moving.</param>
-        /// <param name="square">The square the capture is happening on.</param>
-        /// <returns>If the capture can happen or not.</returns>
-        public bool TryCapture(Piece piece, Square square)
-        {
-            // First make sure nothing is null. If anything is null, we can't do anything.
-            if(piece == null ||square == null)
-            {
-                return false;
-            }
-
-            // Now make sure that we can actually move to that square.
-            if(!CanMoveTo(piece, square))
-            {
-                return false;
-            }
-
-            // With all of that out of the way, we can move on to captures.
-            // First, let's set the piece on the target square to captured.
-            square.Piece.IsCaptured = true;     // This will disable it, making it invisible.
-            Piece formerPiece = square.Piece;   // Will need this for later!
-
-            // Now, we'll technically move the piece to that square.
-            TryMove(piece, square);
-
-            // After that, clear that Piece's data. It no longer exists on the board.
-            formerPiece.Location = null;
-
-            // Return true, as the capture has succeeded.
             return true;
         }
     }

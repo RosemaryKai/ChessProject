@@ -15,6 +15,7 @@ namespace Chess
         private int x; 
         private int y;
         private Piece piece;
+        private bool hasHighlight;
         // PROPERTIES of this class 
         /// <summary> 
         /// A get-only property for if there is a piece on this square. 
@@ -51,6 +52,14 @@ namespace Chess
         public string Name
         {
             get { return ToString(); }
+        }
+        /// <summary>
+        /// Property for if the square currently has an active highlight.
+        /// </summary>
+        public bool HasHighlight
+        {
+            get { return hasHighlight; }
+            set { hasHighlight = value; }
         }
         // CTORS of this class
         public Square(int x, int y)
