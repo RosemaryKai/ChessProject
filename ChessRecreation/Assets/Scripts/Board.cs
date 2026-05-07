@@ -14,7 +14,8 @@ namespace Chess
     {
         // FIELDS of this class
         private Square[,] board;
-        private List<Piece> pieces;
+        private List<Piece> blackPieces;
+        private List<Piece> whitePieces;
 
         // PROPERTIES of this class
         /// <summary> 
@@ -22,7 +23,8 @@ namespace Chess
         /// </summary> 
         public int NumberOfPieces
         {
-            get { return pieces.Count; }
+            get { return whitePieces.Count + 
+                    blackPieces.Count; }
         }
         /// <summary>
         /// Read-Only property for the ranks of the board.
@@ -83,7 +85,8 @@ namespace Chess
         /// </summary>
         private void StartingPosition()
         {
-            pieces = new List<Piece>();
+            whitePieces = new List<Piece>();
+            blackPieces = new List<Piece>();
             // Insantiation of the White Pieces.
             for (int i = 0; i < 2; i++)
             {
@@ -93,14 +96,14 @@ namespace Chess
                     if(i == 1)
                     {
                         Pawn newPawn = new Pawn(board[j, i], PieceColor.White);
-                        pieces.Add(newPawn);
+                        whitePieces.Add(newPawn);
                         board[j, i].Piece = newPawn;
                     }
                     // WHITE ROOKS
                     if((j == 0 || j == 7) && i == 0)
                     {
                         Rook newRook = new Rook(board[j, i], PieceColor.White);
-                        pieces.Add(newRook);
+                        whitePieces.Add(newRook);
                         board[j, i].Piece = newRook;
                     }
 
@@ -108,7 +111,7 @@ namespace Chess
                     if((j == 2 || j == 5) && i == 0)
                     {
                         Bishop newBishop = new Bishop(board[j, i], PieceColor.White);
-                        pieces.Add(newBishop);
+                        whitePieces.Add(newBishop);
                         board[j, i].Piece = newBishop;
                     }
 
@@ -116,7 +119,7 @@ namespace Chess
                     if ((j == 1 || j == 6) && i == 0)
                     {
                         Knight newKnight = new Knight(board[j, i], PieceColor.White);
-                        pieces.Add(newKnight);
+                        whitePieces.Add(newKnight);
                         board[j, i].Piece = newKnight;
                     }
 
@@ -124,7 +127,7 @@ namespace Chess
                     if (j == 3 && i == 0)
                     {
                         Queen newQueen = new Queen(board[j, i], PieceColor.White);
-                        pieces.Add(newQueen);
+                        whitePieces.Add(newQueen);
                         board[j, i].Piece = newQueen;
                     }
 
@@ -132,7 +135,7 @@ namespace Chess
                     if (j == 4 && i == 0)
                     {
                         King newKing = new King(board[j, i], PieceColor.White);
-                        pieces.Add(newKing);
+                        whitePieces.Add(newKing);
                         board[j, i].Piece = newKing;
                     }
                 }
@@ -146,14 +149,14 @@ namespace Chess
                     if (i == 6)
                     {
                         Pawn newPawn = new Pawn(board[j, i], PieceColor.Black);
-                        pieces.Add(newPawn);
+                        blackPieces.Add(newPawn);
                         board[j, i].Piece = newPawn;
                     }
                     // BLACK ROOKS
                     if ((j == 0 || j == 7) && i == 7)
                     {
                         Rook newRook = new Rook(board[j, i], PieceColor.Black);
-                        pieces.Add(newRook);
+                        blackPieces.Add(newRook);
                         board[j, i].Piece = newRook;
                     }
 
@@ -161,7 +164,7 @@ namespace Chess
                     if ((j == 2 || j == 5) && i == 7)
                     {
                         Bishop newBishop = new Bishop(board[j, i], PieceColor.Black);
-                        pieces.Add(newBishop);
+                        blackPieces.Add(newBishop);
                         board[j, i].Piece = newBishop;
                     }
 
@@ -169,7 +172,7 @@ namespace Chess
                     if ((j == 1 || j == 6) && i == 7)
                     {
                         Knight newKnight = new Knight(board[j, i], PieceColor.Black);
-                        pieces.Add(newKnight);
+                        blackPieces.Add(newKnight);
                         board[j, i].Piece = newKnight;
                     }
 
@@ -177,7 +180,7 @@ namespace Chess
                     if (j == 3 && i == 7)
                     {
                         Queen newQueen = new Queen(board[j, i], PieceColor.Black);
-                        pieces.Add(newQueen);
+                        blackPieces.Add(newQueen);
                         board[j, i].Piece = newQueen;
                     }
 
@@ -185,7 +188,7 @@ namespace Chess
                     if (j == 4 && i == 7)
                     {
                         King newKing = new King(board[j, i], PieceColor.Black);
-                        pieces.Add(newKing);
+                        blackPieces.Add(newKing);
                         board[j, i].Piece = newKing;
                     }
                 }
@@ -272,5 +275,7 @@ namespace Chess
 
             return true;
         }
+
+        
     }
 }
