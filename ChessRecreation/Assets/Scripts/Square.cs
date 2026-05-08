@@ -16,6 +16,9 @@ namespace Chess
         private int y;
         private Piece piece;
         private bool hasHighlight;
+        private bool seenByBlack;
+        private bool seenByWhite;
+
         // PROPERTIES of this class 
         /// <summary> 
         /// A get-only property for if there is a piece on this square. 
@@ -61,6 +64,23 @@ namespace Chess
             get { return hasHighlight; }
             set { hasHighlight = value; }
         }
+        /// <summary>
+        /// If the black pieces see the square or not.
+        /// </summary>
+        public bool BlackSees
+        {
+            get { return seenByBlack; }
+            set { seenByBlack = value; }
+        }
+        /// <summary>
+        /// If the white pieces see this square or not.
+        /// </summary>
+        public bool WhiteSees
+        {
+            get { return seenByWhite; }
+            set { seenByWhite = value; }
+        }
+
         // CTORS of this class
         public Square(int x, int y)
         { 
@@ -110,6 +130,14 @@ namespace Chess
             }
             return letter; 
         } 
+        /// <summary>
+        /// Resets the square to no longer be seen by either color.
+        /// </summary>
+        public void SeenReset()
+        {
+            seenByBlack = false;
+            seenByWhite = false;
+        }
         /// <summary>
         /// A ToString of the square.
         /// </summary>

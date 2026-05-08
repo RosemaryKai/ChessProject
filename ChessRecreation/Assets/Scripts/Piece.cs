@@ -99,7 +99,11 @@ namespace Chess
         /// </summary>
         /// <returns>A list of squares the piece could see.</returns>
         public abstract List<Square> Move(Board board);
-
+        /// <summary>
+        /// The squares the piece attacks.
+        /// </summary>
+        /// <param name="board"></param>
+        /// <returns></returns>
         public abstract List<Square> Attack(Board board);
 
         public override string ToString()
@@ -223,6 +227,7 @@ namespace Chess
         public void Captured()
         {
             isCaptured = true;
+            location.Piece = null;
             location = null;
         }
     }

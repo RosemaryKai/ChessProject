@@ -16,6 +16,8 @@ namespace Chess
         private Square[,] board;
         private List<Piece> blackPieces;
         private List<Piece> whitePieces;
+        private King blackKing;
+        private King whiteKing;
 
         // PROPERTIES of this class
         /// <summary> 
@@ -77,9 +79,17 @@ namespace Chess
                     board[i, j] = new Square(i, j);
                 }
             }
+            // Now set up methods! Subscribing to events
+            // and setting up the starting position.
+            ChessManager.TurnFlipped += UpdateSquareData;
             StartingPosition();
         }
         // METHODS of this class
+        public void Update()
+        {
+            whiteKing.Update();
+            blackKing.Update();
+        }
         /// <summary>
         /// Sets the starting position of the board.
         /// </summary>
@@ -137,6 +147,7 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.White);
                         whitePieces.Add(newKing);
                         board[j, i].Piece = newKing;
+                        whiteKing = newKing;
                     }
                 }
             }
@@ -190,6 +201,7 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.Black);
                         blackPieces.Add(newKing);
                         board[j, i].Piece = newKing;
+                        blackKing = newKing;
                     }
                 }
             }
@@ -274,6 +286,45 @@ namespace Chess
             square.Piece = piece;                       // Sets the square's piece to that piece.
 
             return true;
+        }
+        /// <summary>
+        /// Resets every square to its base value.
+        /// </summary>
+        private void ResetSquares()
+        {
+            for (int r = 0; r < board.GetLength(0); r++)
+            {
+                for (int f = 0; f < board.GetLength(1); f++)
+                {
+                    board[r, f].BlackSees = false;
+                    board[r, f].WhiteSees = false;
+                }
+            }
+        }
+        /// <summary>
+        /// Draws the attack map of every piece on the board.
+        /// </summary>
+        private void GetAttackMap()
+        {
+            // Read through each piece to get the square it attacks.
+            for (int i = 0; i < blackPieces.Count; i++)
+            {
+                if (!blackPieces[i].IsCaptured)
+                    blackPieces[i].Attack(this);
+            }
+            for (int i = 0; i < whitePieces.Count; i++)
+            {
+                if (!whitePieces[i].IsCaptured)
+                    whitePieces[i].Attack(this);
+            }
+        }
+        /// <summary>
+        /// Updates the data of squares using two other methods.
+        /// </summary>
+        public void UpdateSquareData()
+        {
+            ResetSquares();
+            GetAttackMap();
         }
 
         

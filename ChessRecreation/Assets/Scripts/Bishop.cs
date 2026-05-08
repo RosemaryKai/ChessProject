@@ -79,7 +79,30 @@ namespace Chess
         /// <returns>A list of squares attacked by this Bishop.</returns>
         public override List<Square> Attack(Board board)
         {
-            return Move(board);
+            // Make a list for the squares seen.
+            List<Square> seenSquares = Move(board);
+
+            // Then, in the attack method, we will update the squares
+            // the piece sees so that they know they are seen by the
+            // color.
+            switch (color)
+            {
+                case PieceColor.White:
+                    for (int i = 0; i < seenSquares.Count; i++)
+                    {
+                        seenSquares[i].WhiteSees = true;
+                    }
+                    break;
+                case PieceColor.Black:
+                    for (int i = 0; i < seenSquares.Count; i++)
+                    {
+                        seenSquares[i].BlackSees = true;
+                    }
+                    break;
+            }
+
+            // Then, we return the list.
+            return seenSquares;
         }
 
     }

@@ -31,7 +31,7 @@ namespace Chess
         private Dictionary<Square, SquareView> squareViews;
 
         // Rotation for the camera.
-        [SerializeField] private Camera camera;
+        [SerializeField] new private Camera camera;
 
         // Objects and fields required from Unity.
         // Prefabs for the game!
@@ -65,7 +65,6 @@ namespace Chess
         {
             // We first must read what color the player chose.
             PieceColor choice = GameManager.Instance.PlayerChoice;
-
             // Responding to that, we will flip the camera if they chose black.
             if(choice == PieceColor.White)
             {
@@ -336,6 +335,8 @@ namespace Chess
             {
                 ClearHighlights();
             }
+            // King check logic
+            board.Update();
         }
         /// <summary>
         /// Clicking on GameObjects, for moving.
@@ -406,7 +407,6 @@ namespace Chess
                     // If we don't have a selected piece? Select the piece we clicked on. 
                     else if(chessManager.Turn == pieceView.Piece.Color)
                     {
-                        Debug.Log($"{pieceView.Piece}");
                         selectedPiece = pieceView.Piece;
                         HighlightMoves(selectedPiece);
                         return;
@@ -420,13 +420,10 @@ namespace Chess
                 // If it is a square, squareView won't be null.
                 if (squareView != null)
                 {
-                    Debug.Log($"{squareView.Square}");
-
                     // Now let's move a piece- if it's selected.
                     if (selectedPiece != null)
                     {
                         bool moved = board.TryMove(selectedPiece, squareView.Square);
-                        Debug.Log($"Did it move? {moved}");
 
                         // Move the prefab to the new square- if the move was successful.
                         if (moved)
@@ -452,7 +449,9 @@ namespace Chess
                 }
             }
         }
-
+        /// <summary>
+        /// Clicking on GameObjects with rightclick, has different function.
+        /// </summary>
         public void OnRightClick()
         {
             // Create a raycast.
@@ -469,6 +468,7 @@ namespace Chess
                 squareView = hit.collider.GetComponent<SquareView>();
 
                 // If it was a piece we hit? Get its location.
+                // Right clicks care about the square the piece is on, not the piece itself.
                 if(pieceView != null)
                 {
                     Square square = pieceView.Piece.Location;
@@ -486,6 +486,8 @@ namespace Chess
 
                     // Then add them to the list.
                     activeSquareHighlights.Add(newSquare);
+                    Debug.Log($"{square}, Attacked? White: {square.WhiteSees}; Black: {square.BlackSees}.");
+
                 }
                 // If it was a square we clicked on? That's easy.
                 else if(squareView != null)
@@ -508,6 +510,7 @@ namespace Chess
 
                     // Then add them to the list.
                     activeSquareHighlights.Add(newSquare);
+                    Debug.Log($"{square}, Attacked? White: {square.WhiteSees}; Black: {square.BlackSees}.");
                 }
             }
         }

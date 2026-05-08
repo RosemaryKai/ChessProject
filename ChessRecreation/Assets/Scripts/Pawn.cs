@@ -121,6 +121,25 @@ namespace Chess
                     squares.Add(newSquares[0]);
                 }
             }
+
+            // In the attack method, we will update the squares the
+            // piece sees so that they know they are seen by the color.
+            switch (color)
+            {
+                case PieceColor.White:
+                    for (int i = 0; i < squares.Count; i++)
+                    {
+                        squares[i].WhiteSees = true;
+                    }
+                    break;
+                case PieceColor.Black:
+                    for (int i = 0; i < squares.Count; i++)
+                    {
+                        squares[i].BlackSees = true;
+                    }
+                    break;
+            }
+
             // Finally, return the list.
             return squares;
         }

@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 using Chess;
 
@@ -5,6 +6,7 @@ public class ChessManager : MonoBehaviour
 {
     // FIELDS of this class
     private PieceColor turn;
+    public static event Action TurnFlipped;  
 
     // PROPERTIES of this class
     public PieceColor Turn
@@ -39,5 +41,7 @@ public class ChessManager : MonoBehaviour
         {
             turn = PieceColor.White;
         }
+        // This event will mainly be for UI
+        TurnFlipped?.Invoke();
     }
 }

@@ -1,8 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using UnityEngine;
 
 namespace Chess
 {
@@ -17,7 +19,18 @@ namespace Chess
         /// </summary>
         public bool IsChecked
         {
-            get { return IsChecked; }
+            get
+            {
+                switch (color)
+                {
+                    case PieceColor.White:
+                        return location.BlackSees;
+                    case PieceColor.Black:
+                        return location.WhiteSees;
+                    default:
+                        return false;
+                }
+            }
         }
         /// <summary>
         /// If the king can castle with a rook.
@@ -37,6 +50,14 @@ namespace Chess
         }
 
         // METHODS of this class
+
+        public void Update()
+        {
+            if (isChecked)
+            {
+                UnityEngine.Debug.Log("I am in check!!! " + color);
+            }
+        }
 
         public override List<Square> Move(Board board)
         {
@@ -112,7 +133,30 @@ namespace Chess
 
         public override List<Square> Attack(Board board)
         {
-            return Move(board);
+            // Make a list for the squares seen.
+            List<Square> seenSquares = Move(board);
+
+            // Then, in the attack method, we will update the squares
+            // the piece sees so that they know they are seen by the
+            // color.
+            switch (color)
+            {
+                case PieceColor.White:
+                    for (int i = 0; i < seenSquares.Count; i++)
+                    {
+                        seenSquares[i].WhiteSees = true;
+                    }
+                    break;
+                case PieceColor.Black:
+                    for (int i = 0; i < seenSquares.Count; i++)
+                    {
+                        seenSquares[i].BlackSees = true;
+                    }
+                    break;
+            }
+
+            // Then, we return the list.
+            return seenSquares;
         }
 
     }
