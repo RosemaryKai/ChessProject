@@ -35,6 +35,8 @@ namespace Chess
 
         // Objects and fields required from Unity.
         // Prefabs for the game!
+        [SerializeField] private GameObject darkSquarePrefab;
+        [SerializeField] private GameObject lightSquarePrefab;
         [SerializeField] private GameObject squarePrefab;
         [SerializeField] private GameObject whiteRookPrefab;
         [SerializeField] private GameObject blackRookPrefab;
@@ -52,8 +54,8 @@ namespace Chess
         [SerializeField] private GameObject pieceHighlightPrefab;
 
         // Now other data for the game.
-        [SerializeField] private Material darkSquare;
-        [SerializeField] private Material lightSquare;
+        [SerializeField] private Sprite darkSquare;
+        [SerializeField] private Sprite lightSquare;
         [SerializeField] private Material squareHighlight;
         [SerializeField] private Transform boardParent;
 
@@ -64,7 +66,15 @@ namespace Chess
         public void Start() 
         {
             // We first must read what color the player chose.
-            PieceColor choice = GameManager.Instance.PlayerChoice;
+            PieceColor choice;
+            if (GameManager.Instance == null)
+            {
+                choice = PieceColor.White;
+            }
+            else
+            {
+                choice = GameManager.Instance.PlayerChoice;
+            }
             // Responding to that, we will flip the camera if they chose black.
             if(choice == PieceColor.White)
             {
@@ -85,11 +95,12 @@ namespace Chess
             activeSquareHighlights = new List<GameObject>();
 
             // Now create a variable to store the color of the square.
-            Material color;
+            Sprite texture;
             
             // Now let's iterate through the boards...
             for (int r = 0; r < board.Ranks; r++)
             {
+                GameObject newSquare;
                 for (int f = 0; f < board.Files; f++)
                 {
                     #region squareInstantiation
@@ -97,28 +108,25 @@ namespace Chess
                     // Even squares are dark.
                     if ((r + f) % 2 == 0)
                     {
-                        color = darkSquare;
+                        newSquare = Instantiate(darkSquarePrefab,
+                            new Vector3(r, f, 0),
+                            new Quaternion(),
+                            boardParent);
                     }
                     // Odd squares are light.
-                    else
+                    else 
                     {
-                        color = lightSquare;
+                        newSquare = Instantiate(lightSquarePrefab,
+                            new Vector3(r, f, 0),
+                            new Quaternion(),
+                            boardParent);
                     }
-                    // Now instantiate that square.
-                    GameObject newSquare = Instantiate(squarePrefab,
-                        new Vector3(r, f, 0),
-                        new Quaternion(),
-                        boardParent);
 
                     // Grabs the SquareView component off of the GameObject.
                     // Also make it active so it can be seen!
                     SquareView sView = newSquare.GetComponent<SquareView>();
                     sView.Square = board[r, f];
                     newSquare.SetActive(true);
-
-                    // Get the SpriteRenderer as well, to change the material
-                    SpriteRenderer renderer = newSquare.GetComponent<SpriteRenderer>();
-                    renderer.material = color;
 
                     // Now add that square and squareview to the dictionary.
                     squareViews.Add(sView.Square, sView);
