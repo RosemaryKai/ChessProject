@@ -22,7 +22,7 @@ namespace Chess
         /// </summary>
         public bool CanCastle
         {
-            get { return hasMoved; }
+            get { return !hasMoved; }
         }
 
         // CTORs of this class

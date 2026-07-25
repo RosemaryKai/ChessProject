@@ -343,8 +343,6 @@ namespace Chess
             {
                 ClearHighlights();
             }
-            // King check logic
-            board.Update();
         }
         /// <summary>
         /// Clicking on GameObjects, for moving.

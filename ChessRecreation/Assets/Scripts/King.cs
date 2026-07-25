@@ -37,7 +37,7 @@ namespace Chess
         /// </summary>
         public bool CanCastle
         {
-            get { return hasMoved; }
+            get { return !hasMoved; }
         }
 
         // CTORs of this class
@@ -127,7 +127,15 @@ namespace Chess
             {
                 squares.Add(newSquares[0]);
             }
-
+            // If the king has not moved, check if it can truly castle.
+            if (CanCastle)
+            {
+                List<Square> castleSquares = CastleCheck(board);
+                for (int i = 0; i < castleSquares.Count; i++)
+                {
+                    squares.Add(castleSquares[i]);
+                }
+            }
             return squares;
         }
 
@@ -159,5 +167,56 @@ namespace Chess
             return seenSquares;
         }
 
+        public override string ToString()
+        {
+            return $"{color} {pieceType}; {location}, Has moved? {hasMoved}; Checked? {IsChecked}";
+        }
+        /// <summary>
+        /// In cases that the King can castle, this method will add the square.
+        /// </summary>
+        /// <returns>Squares that the king could castle to.</returns>
+        public List<Square> CastleCheck(Board board)
+        {
+            List<Square> squares = new List<Square>();
+            List<Square> newSquares = new List<Square>();
+            // = = = = = = = RIGHT SQUARES = = = = = = = 
+            newSquares = GetRay(0, 1, board);
+            if (newSquares.Count > 0)
+            {
+                // Make sure the squares in between the king and the rook/edge are not occupied.
+                bool seesRook = true;
+                for (int i = 0; i < newSquares.Count - 1; i++)
+                {
+                    if (newSquares[i].IsOccupied)
+                    {
+                        seesRook = false;
+                    }
+                }
+                if(seesRook == true)
+                {
+                    squares.Add(newSquares[newSquares.Count - 1]);
+                }
+            }
+
+            // = = = = = = = LEFT SQUARES = = = = = = = 
+            newSquares = GetRay(0, -1, board);
+            if (newSquares.Count > 0)
+            {
+                // Make sure the squares in between the king and the rook/edge are not occupied.
+                bool seesRook = true;
+                for (int i = 0; i < newSquares.Count - 1; i++)
+                {
+                    if (newSquares[i].IsOccupied)
+                    {
+                        seesRook = false;
+                    }
+                }
+                if (seesRook == true)
+                {
+                    squares.Add(newSquares[newSquares.Count - 1]);
+                }
+            }
+            return squares;
+        }
     }
 }
