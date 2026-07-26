@@ -19,6 +19,18 @@ namespace Chess
         private bool seenByBlack;
         private bool seenByWhite;
 
+        #region neighbor fields
+        // FIELDS - These will be the neighboring squares of this square in all 8 directions (if possible). 
+        private Square north;
+        private Square south;
+        private Square east;
+        private Square west;
+        private Square northwest;
+        private Square northeast;
+        private Square southwest;
+        private Square southeast;
+        #endregion
+
         // PROPERTIES of this class 
         /// <summary> 
         /// A get-only property for if there is a piece on this square. 
@@ -54,7 +66,7 @@ namespace Chess
         /// </summary>
         public string Name
         {
-            get { return ToString(); }
+            get { return $"{XAxisConversion(x)}{y + 1}"; }
         }
         /// <summary>
         /// Property for if the square currently has an active highlight.
@@ -80,6 +92,75 @@ namespace Chess
             get { return seenByWhite; }
             set { seenByWhite = value; }
         }
+
+        #region neighbor properties
+        // PROPERTIES - These properties represent public access to their neighbors.
+        // Do note this is from White's perspective. (South = North from black's perspective).
+        /// <summary>
+        /// The square to the north of this one.
+        /// </summary>
+        public Square North
+        {
+            get { return north; }
+            private set { north = value; }
+        }
+        /// <summary>
+        /// The square to the south of this one.
+        /// </summary>
+        public Square South
+        {
+            get { return south; }
+            private set { south = value; }
+        }
+        /// <summary>
+        /// The square to the east of this one.
+        /// </summary>
+        public Square East
+        {
+            get { return east; }
+            private set { east = value; }
+        }
+        /// <summary>
+        /// The square to the west of this one.
+        /// </summary>
+        public Square West
+        {
+            get { return west; }
+            private set { west = value; }
+        }
+        /// <summary>
+        /// The square to the northeast of this one.
+        /// </summary>
+        public Square NorthEast
+        {
+            get { return northeast; }
+            private set { northeast = value; }
+        }
+        /// <summary>
+        /// The square to the northwest of this one.
+        /// </summary>
+        public Square NorthWest
+        {
+            get { return northwest; }
+            private set { northwest = value; }
+        }
+        /// <summary>
+        /// The square to the southeast of this one.
+        /// </summary>
+        public Square SouthEast
+        {
+            get { return southeast; }
+            private set { southeast = value; }
+        }
+        /// <summary>
+        /// The square to the southwest of this one.
+        /// </summary>
+        public Square SouthWest
+        {
+            get { return southwest; }
+            private set { southwest = value; }
+        }
+        #endregion
 
         // CTORS of this class
         public Square(int x, int y)
@@ -129,7 +210,30 @@ namespace Chess
                     throw new IndexOutOfRangeException("ERROR: Board cannot be larger than 8x8.");
             }
             return letter; 
-        } 
+        }
+        /// <summary>
+        /// A method to set the neighbors of the square.
+        /// </summary>
+        /// <param name="north">The square to the north of this one.</param>
+        /// <param name="south">The square to the south of this one.</param>
+        /// <param name="east">The square to the east of this one.</param>
+        /// <param name="west">The square to the west of this one.</param>
+        /// <param name="northwest">The square to the northwest of this one.</param>
+        /// <param name="southwest">The square to the southwest of this one.</param>
+        /// <param name="southeast">The square to the southeast of this one.</param>
+        /// <param name="northeast">The square to the northeast of this one.</param>
+        public void SetNeighbors(Square north, Square south, Square east, Square west,
+            Square northwest, Square southwest, Square southeast, Square northeast)
+        {
+            this.north = north;
+            this.south = south;
+            this.east = east;
+            this.west = west;
+            this.northwest = northwest;
+            this.southwest = southwest;
+            this.northeast = northeast;
+            this.southeast = southeast;
+        }
         /// <summary>
         /// Resets the square to no longer be seen by either color.
         /// </summary>
@@ -144,7 +248,7 @@ namespace Chess
         /// <returns>The squares coordinates as a string.</returns>
         public override string ToString() 
         {
-            return $"{XAxisConversion(x)}{y + 1}";
+            return $"{Name}";
         }
     }
 }

@@ -16,8 +16,6 @@ namespace Chess
         private Square[,] board;
         private List<Piece> blackPieces;
         private List<Piece> whitePieces;
-        private King blackKing;
-        private King whiteKing;
 
         // PROPERTIES of this class
         /// <summary> 
@@ -79,6 +77,78 @@ namespace Chess
                     board[i, j] = new Square(i, j);
                 }
             }
+
+            // After all squares are made, we want to set their neighbors!
+            // This is so it's easy to access neighboring squares through the
+            // locations of pieces, which is important for some cards!
+            /* Movements in directions form squares:
+            North: board[i, j + 1]
+            South: board[i, j - 1]
+            East: board[i + 1, j]
+            West: board[i - 1, j]
+            NorthEast: board[i + 1, j + 1]
+            SouthEast: board[i + 1, j - 1]
+            NorthWest: board[i - 1, j + 1]
+            SouthWest: board[i - 1, j - 1]
+            */
+            for (int i = 0; i < board.GetLength(0); i++)
+            {
+                for (int j = 0; j < board.GetLength(1); j++)
+                {
+                    Square currentSquare = board[i, j];
+                    #region corners
+                    // The A1 Square. 
+                    if (i == 0 && j == 0)
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], null, board[i + 1, j], null, null, null, null, board[i + 1, j + 1]);
+                    }
+                    // The A8 Square.
+                    else if (i == 0 && j == board.GetLength(1) - 1)
+                    {
+                        currentSquare.SetNeighbors(null, board[i, j - 1], board[i + 1, j], null, null, null, board[i + 1, j - 1], null);
+                    }
+                    // The H1 Square.
+                    else if(i == board.GetLength(0) - 1 && j == 0)
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], null, null, board[i - 1, j], board[i - 1, j + 1], null, null, null);
+                    }
+                    // The H8 Square.
+                    else if (i == board.GetLength(0) - 1 && j == board.GetLength(1) - 1)
+                    {
+                        currentSquare.SetNeighbors(null, board[i, j - 1], null, board[i - 1, j], null, board[i - 1, j - 1], null, null);
+                    }
+                    #endregion
+                    #region edges
+                    // Squares on the first file (A file). 
+                    else if (i == 0 && j != board.GetLength(1) - 1)
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], board[i, j - 1], board[i + 1, j], null, null, null, board[i + 1, j - 1], board[i + 1, j + 1]);
+                    }
+                    // Squares on the first rank (1st rank).
+                    else if (j == 0 && i != board.GetLength(0) - 1)
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], null, board[i + 1, j], board[i + 1, j], board[i - 1, j + 1], null, null, board[i + 1, j + 1]);
+                    }
+                    // Squares on the final file (H file).
+                    else if (i == board.GetLength(0) - 1 && j != board.GetLength(1) - 1)
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], board[i, j - 1], null, board[i - 1, j], board[i - 1, j + 1], board[i - 1, j - 1], null, null);
+                    }
+                    // Squares on the final rank (8th rank).
+                    else if (j == board.GetLength(1) - 1 && i != board.GetLength(0) - 1)
+                    {
+                        currentSquare.SetNeighbors(null, board[i, j - 1], board[i + 1, j], board[i - 1, j], null, board[i - 1, j - 1], board[i + 1, j - 1], null);
+                    }
+                    #endregion
+                    // Every other square.
+                    else
+                    {
+                        currentSquare.SetNeighbors(board[i, j + 1], board[i, j - 1], board[i + 1, j], board[i - 1, j],
+                            board[i - 1, j + 1], board[i - 1, j - 1], board[i + 1, j - 1], board[i + 1, j + 1]);
+                    }
+                }
+            }
+
             // Now set up methods! Subscribing to events
             // and setting up the starting position.
             ChessManager.TurnFlipped += UpdateSquareData;
@@ -87,8 +157,7 @@ namespace Chess
         // METHODS of this class
         public void Update()
         {
-            whiteKing.Update();
-            blackKing.Update();
+            // Empty for now
         }
         /// <summary>
         /// Sets the starting position of the board.
@@ -147,7 +216,6 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.White);
                         whitePieces.Add(newKing);
                         board[j, i].Piece = newKing;
-                        whiteKing = newKing;
                     }
                 }
             }
@@ -201,7 +269,6 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.Black);
                         blackPieces.Add(newKing);
                         board[j, i].Piece = newKing;
-                        blackKing = newKing;
                     }
                 }
             }
@@ -296,8 +363,7 @@ namespace Chess
             {
                 for (int f = 0; f < board.GetLength(1); f++)
                 {
-                    board[r, f].BlackSees = false;
-                    board[r, f].WhiteSees = false;
+                    board[r, f].SeenReset();
                 }
             }
         }
@@ -325,8 +391,6 @@ namespace Chess
         {
             ResetSquares();
             GetAttackMap();
-        }
-
-        
+        }        
     }
 }

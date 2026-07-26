@@ -79,8 +79,37 @@ namespace Chess
         /// <returns>A list of squares attacked by this Bishop.</returns>
         public override List<Square> Attack(Board board)
         {
-            // Make a list for the squares seen.
-            List<Square> seenSquares = Move(board);
+            // Make a list for the squares seen and new squares.
+            List<Square> seenSquares = new List<Square>();
+            List<Square> newSquares = new List<Square>();
+
+            // = = = = = = = UPPER-LEFT SQUARES = = = = = = = 
+            newSquares = GetDirection(-1, 1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = UPPER-RIGHT SQUARES = = = = = = = 
+            newSquares = GetDirection(1, 1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = LOWER-LEFT SQUARES = = = = = = = 
+            newSquares = GetDirection(1, -1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = LOWER-RIGHT SQUARES = = = = = = = 
+            newSquares = GetDirection(-1, -1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
 
             // Then, in the attack method, we will update the squares
             // the piece sees so that they know they are seen by the

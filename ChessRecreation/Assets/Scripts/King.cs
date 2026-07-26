@@ -73,76 +73,180 @@ namespace Chess
             // if a piece moves, helping with pin logic later.
 
             // = = = = = = = UP SQUARE = = = = = = = 
-            newSquares = GetDirection(1, 0, board);
-            if(newSquares.Count > 0)
+            if (color == PieceColor.White && location.North != null && !location.North.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.North);
+            }
+            if (color == PieceColor.Black && location.North != null && !location.North.WhiteSees)
+            {
+                squares.Add(location.North);
             }
 
             // = = = = = = = UP-RIGHT SQUARE = = = = = = = 
-            newSquares = GetDirection(1, 1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.NorthEast != null && !location.NorthEast.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.NorthEast);
+            }
+            if (color == PieceColor.Black && location.NorthEast != null && !location.NorthEast.WhiteSees)
+            {
+                squares.Add(location.NorthEast);
             }
 
             // = = = = = = = RIGHT SQUARE = = = = = = = 
-            newSquares = GetDirection(0, 1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.East != null && !location.East.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.East);
+            }
+            if (color == PieceColor.Black && location.East != null && !location.East.WhiteSees)
+            {
+                squares.Add(location.East);
             }
 
             // = = = = = = = DOWN-RIGHT SQUARE = = = = = = = 
-            newSquares = GetDirection(-1, 1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.SouthEast != null && !location.SouthEast.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.SouthEast);
+            }
+            if (color == PieceColor.Black && location.SouthEast != null && !location.SouthEast.WhiteSees)
+            {
+                squares.Add(location.SouthEast);
             }
 
             // = = = = = = = DOWN SQUARE = = = = = = = 
-            newSquares = GetDirection(-1, 0, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.South != null && !location.South.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.South);
+            }
+            if (color == PieceColor.Black && location.South != null && !location.South.WhiteSees)
+            {
+                squares.Add(location.South);
             }
 
             // = = = = = = = DOWN-LEFT SQUARE = = = = = = = 
-            newSquares = GetDirection(-1, -1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.SouthWest != null && !location.SouthWest.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.SouthWest);
+            }
+            if (color == PieceColor.Black && location.SouthWest != null && !location.SouthWest.WhiteSees)
+            {
+                squares.Add(location.SouthWest);
             }
 
             // = = = = = = = LEFT SQUARE = = = = = = = 
-            newSquares = GetDirection(0, -1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.West != null && !location.West.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.West);
+            }
+            if (color == PieceColor.Black && location.West != null && !location.West.WhiteSees)
+            {
+                squares.Add(location.West);
             }
 
             // = = = = = = = UP-LEFT SQUARE = = = = = = = 
-            newSquares = GetDirection(1, -1, board);
-            if (newSquares.Count > 0)
+            if (color == PieceColor.White && location.NorthWest != null && !location.NorthWest.BlackSees)
             {
-                squares.Add(newSquares[0]);
+                squares.Add(location.NorthWest);
+            }
+            if(color == PieceColor.Black && location.NorthWest != null && !location.NorthWest.WhiteSees)
+            {
+                squares.Add(location.NorthWest);
             }
             // If the king has not moved, check if it can truly castle.
-            if (CanCastle)
-            {
-                List<Square> castleSquares = CastleCheck(board);
-                for (int i = 0; i < castleSquares.Count; i++)
-                {
-                    squares.Add(castleSquares[i]);
-                }
-            }
+            //if (CanCastle)
+            //{
+            //    List<Square> castleSquares = CastleCheck(board);
+            //    for (int i = 0; i < castleSquares.Count; i++)
+            //    {
+            //        squares.Add(castleSquares[i]);
+            //    }
+            //}
             return squares;
         }
 
         public override List<Square> Attack(Board board)
         {
-            // Make a list for the squares seen.
-            List<Square> seenSquares = Move(board);
+            // Make a list for the squares seen and new squares.
+            List<Square> seenSquares = new List<Square>();
+
+            // = = = = = = = UP SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.North != null)
+            {
+                seenSquares.Add(location.North);
+            }
+            if (color == PieceColor.Black && location.North != null)
+            {
+                seenSquares.Add(location.North);
+            }
+
+            // = = = = = = = UP-RIGHT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.NorthEast != null)
+            {
+                seenSquares.Add(location.NorthEast);
+            }
+            if (color == PieceColor.Black && location.NorthEast != null)
+            {
+                seenSquares.Add(location.NorthEast);
+            }
+
+            // = = = = = = = RIGHT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.East != null)
+            {
+                seenSquares.Add(location.East);
+            }
+            if (color == PieceColor.Black && location.East != null)
+            {
+                seenSquares.Add(location.East);
+            }
+
+            // = = = = = = = DOWN-RIGHT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.SouthEast != null)
+            {
+                seenSquares.Add(location.SouthEast);
+            }
+            if (color == PieceColor.Black && location.SouthEast != null)
+            {
+                seenSquares.Add(location.SouthEast);
+            }
+
+            // = = = = = = = DOWN SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.South != null)
+            {
+                seenSquares.Add(location.South);
+            }
+            if (color == PieceColor.Black && location.South != null)
+            {
+                seenSquares.Add(location.South);
+            }
+
+            // = = = = = = = DOWN-LEFT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.SouthWest != null)
+            {
+                seenSquares.Add(location.SouthWest);
+            }
+            if (color == PieceColor.Black && location.SouthWest != null)
+            {
+                seenSquares.Add(location.SouthWest);
+            }
+
+            // = = = = = = = LEFT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.West != null)
+            {
+                seenSquares.Add(location.West);
+            }
+            if (color == PieceColor.Black && location.West != null)
+            {
+                seenSquares.Add(location.West);
+            }
+
+            // = = = = = = = UP-LEFT SQUARE = = = = = = = 
+            if (color == PieceColor.White && location.NorthWest != null)
+            {
+                seenSquares.Add(location.NorthWest);
+            }
+            if (color == PieceColor.Black && location.NorthWest != null)
+            {
+                seenSquares.Add(location.NorthWest);
+            }
 
             // Then, in the attack method, we will update the squares
             // the piece sees so that they know they are seen by the

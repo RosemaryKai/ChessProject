@@ -93,9 +93,55 @@ namespace Chess
         /// <returns>A list of squares attacked by this Knight.</returns>
         public override List<Square> Attack(Board board)
         {
-            // Make a list for the squares seen.
-            List<Square> seenSquares = Move(board);
+            // Make a list for the squares seen and new squares.
+            List<Square> seenSquares = new List<Square>();
+            List<Square> newSquares = new List<Square>();
+            newSquares = GetSeenSquares(2, 1, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+            newSquares = GetSeenSquares(2, -1, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
 
+            // = = = = = = = RIGHT T = = = = = = = 
+            newSquares = GetSeenSquares(1, 2, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+            newSquares = GetSeenSquares(-1, 2, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+
+            // = = = = = = = LEFT T = = = = = = = 
+            newSquares = GetSeenSquares(1, -2, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+            newSquares = GetSeenSquares(-1, -2, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+
+            // = = = = = = = LOWER T = = = = = = = 
+            newSquares = GetSeenSquares(-2, 1, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
+            newSquares = GetSeenSquares(-2, -1, board);
+            if (newSquares.Count != 0)
+            {
+                seenSquares.Add(newSquares[0]);
+            }
             // Then, in the attack method, we will update the squares
             // the piece sees so that they know they are seen by the
             // color.

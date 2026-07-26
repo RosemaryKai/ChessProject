@@ -85,40 +85,62 @@ namespace Chess
         public override List<Square> Attack(Board board)
         {
             List<Square> squares = new List<Square>();
-            List<Square> newSquares = new List<Square>();
+
+            // For the pawns, we make a secondary list.
+            // Why? Simple: We want the squares they can
+            // attack to count as seen, but not be added 
+            // to their possible moves. This is mainly to
+            // prevent the king from walking into check...
+            List<Square> seenSquares = new List<Square>();
 
             // Now for the pawns diagonal attacks.
 
             // White pawns
             if(color == PieceColor.White)
             {
-                newSquares = GetDirection(1, 1, board);
-                if(newSquares.Count > 0 && newSquares[0].IsOccupied &&
-                    newSquares[0].Piece.Color != color)
+                // Make sure that the square actually exists...
+                if(location.NorthWest != null)
                 {
-                    squares.Add(newSquares[0]);
+                    seenSquares.Add(location.NorthWest);
+                    // If there's an enemy piece there, we can add it to the attack list.
+                    if(location.NorthWest.IsOccupied && location.NorthWest.Piece.Color != color)
+                    {
+                        squares.Add(location.NorthWest);
+                    }
                 }
-                newSquares = GetDirection(1, -1, board);
-                if (newSquares.Count > 0 && newSquares[0].IsOccupied &&
-                    newSquares[0].Piece.Color != color)
+                // Now we do the same, but with NorthEast.
+                if (location.NorthEast != null)
                 {
-                    squares.Add(newSquares[0]);
+                    seenSquares.Add(location.NorthEast);
+                    // If there's an enemy piece there, we can add it to the attack list.
+                    if (location.NorthEast.IsOccupied && location.NorthEast.Piece.Color != color)
+                    {
+                        squares.Add(location.NorthEast);
+                    }
                 }
             }
             // Black pawns
             else
             {
-                newSquares = GetDirection(-1, 1, board);
-                if (newSquares.Count > 0 && newSquares[0].IsOccupied &&
-                    newSquares[0].Piece.Color != color)
+                // Make sure that the square actually exists...
+                if (location.SouthWest != null)
                 {
-                    squares.Add(newSquares[0]);
+                    seenSquares.Add(location.SouthWest);
+                    // If there's an enemy piece there, we can add it to the attack list.
+                    if (location.SouthWest.IsOccupied && location.SouthWest.Piece.Color != color)
+                    {
+                        squares.Add(location.SouthWest);
+                    }
                 }
-                newSquares = GetDirection(-1, -1, board);
-                if (newSquares.Count > 0 && newSquares[0].IsOccupied &&
-                    newSquares[0].Piece.Color != color)
+                // Now we do the same, but with SouthEast.
+                if (location.SouthEast != null)
                 {
-                    squares.Add(newSquares[0]);
+                    seenSquares.Add(location.SouthEast);
+                    // If there's an enemy piece there, we can add it to the attack list.
+                    if (location.SouthEast.IsOccupied && location.SouthEast.Piece.Color != color)
+                    {
+                        squares.Add(location.SouthEast);
+                    }
                 }
             }
 
@@ -127,20 +149,20 @@ namespace Chess
             switch (color)
             {
                 case PieceColor.White:
-                    for (int i = 0; i < squares.Count; i++)
+                    for (int i = 0; i < seenSquares.Count; i++)
                     {
-                        squares[i].WhiteSees = true;
+                        seenSquares[i].WhiteSees = true;
                     }
                     break;
                 case PieceColor.Black:
-                    for (int i = 0; i < squares.Count; i++)
+                    for (int i = 0; i < seenSquares.Count; i++)
                     {
-                        squares[i].BlackSees = true;
+                        seenSquares[i].BlackSees = true;
                     }
                     break;
             }
 
-            // Finally, return the list.
+            // Finally, return the list of squares.
             return squares;
         }
 

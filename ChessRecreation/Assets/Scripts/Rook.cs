@@ -90,9 +90,36 @@ namespace Chess
         /// <returns>A list of squares attacked by the Rook.</returns>
         public override List<Square> Attack(Board board)
         {
-            // Make a list for the squares seen.
-            List<Square> seenSquares = Move(board);
-            
+            // Make a list for the squares seen and new squares.
+            List<Square> seenSquares = new List<Square>();
+            List<Square> newSquares = new List<Square>();
+            // = = = = = = = RIGHT SQUARES = = = = = = = 
+            newSquares = GetSeenSquares(1, 0, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = LEFT SQUARES = = = = = = = 
+            newSquares = GetSeenSquares(-1, 0, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = UP SQUARES = = = = = = = 
+            newSquares = GetSeenSquares(0, 1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = DOWN SQUARES = = = = = = = 
+            newSquares = GetSeenSquares(0, -1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
             // Then, in the attack method, we will update the squares
             // the piece sees so that they know they are seen by the
             // color.

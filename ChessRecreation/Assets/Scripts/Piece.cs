@@ -104,14 +104,15 @@ namespace Chess
         /// </summary>
         /// <param name="board"></param>
         /// <returns></returns>
-        public abstract List<Square> Attack(Board board);
+        public abstract List<Square> Attack(Board board); // In pretty much every attack method, the piece in question will use
+        // the GetSeenSquare method to check every square until it runs into something it cannot move through. 
 
         public override string ToString()
         {
             return $"{color} {pieceType}; {location}, Has moved? {hasMoved}";
         }
         /// <summary>
-        /// Draws a line of possible moves to the very edge of the board.
+        /// Draws a line of every square the piece could move to from its current location if there were nothing in the way.
         /// </summary>
         /// <param name="rankStep">How far the piece moves on the rank.</param>
         /// <param name="fileStep">How far the piece moves on the file.</param>
@@ -290,6 +291,107 @@ namespace Chess
                     else if (currentSquare.Piece.Color == color)
                         break;
                     // If there's an enemy piece there? Add it, but stop.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+            }
+            // Return the list of squares.
+            return squares;
+        }
+        /// <summary>
+        /// Draws a line stopping on the square of anything that gets in its way.
+        /// </summary>
+        /// <param name="rankStep">How far it moves on the rank.</param>
+        /// <param name="fileStep">How far it moves on the file.</param>
+        /// <param name="board">The board.</param>
+        /// <returns>The squares it found.</returns>
+        protected List<Square> GetSeenSquares(int rankStep, int fileStep, Board board)
+        {
+            // Make sure the piece is actually taking steps.
+            // If it's not? Throw an exception.
+            if (fileStep == 0 && rankStep == 0)
+            {
+                throw new Exception("ERROR: Both steps cannot be zero.");
+            }
+
+            // Create a new list of squares to be returned.
+            List<Square> squares = new List<Square>();
+
+            // Also create a current square variable, starting at the piece's location.
+            // We mainly need it to get its values.
+            Square currentSquare = location;
+            int currentFile = currentSquare.File;
+            int currentRank = currentSquare.Rank;
+
+            // First deal with diagonals.
+            if (rankStep != 0 && fileStep != 0)
+            {
+                // Keep adding until we cannot anymore!!!
+                while (currentSquare.Rank + rankStep >= 0 && currentSquare.Rank + rankStep < board.Ranks
+                    && currentSquare.File + fileStep >= 0 && currentSquare.File + fileStep < board.Files)
+                {
+                    // Increment based on the values we're given.
+                    currentRank += rankStep;
+                    currentFile += fileStep;
+                    // Then find that square, and add it to the list.
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // We, however, stop at a piece. We still include its square.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+                // Finally, return the list.
+                return squares;
+            }
+
+            // Now begin to add the squares based on the direction asked for.
+            // We'll deal with files next...
+            if (fileStep != 0)
+            {
+                while (currentFile + fileStep < board.Files && currentFile + fileStep >= 0)
+                {
+                    currentFile += fileStep;
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // Add the square, even if it is occupied, but stop.
+                    else
+                    {
+                        squares.Add(currentSquare);
+                        break;
+                    }
+                }
+            }
+
+            // Now deal with ranks.
+            if (rankStep != 0)
+            {
+                while (currentRank + rankStep < board.Ranks && currentRank + rankStep >= 0)
+                {
+                    currentRank += rankStep;
+                    currentSquare = board[currentFile, currentRank];
+
+                    // If the square is not occupied? Add it to the list.
+                    if (!currentSquare.IsOccupied)
+                    {
+                        squares.Add(currentSquare);
+                    }
+                    // Stop when an occupied square is found, but still add it.
                     else
                     {
                         squares.Add(currentSquare);
