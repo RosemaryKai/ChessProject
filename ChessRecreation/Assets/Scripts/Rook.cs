@@ -53,28 +53,28 @@ namespace Chess
             // = = = = = = = RIGHT SQUARES = = = = = = = 
             // Have a list get the new squares.. then add it to seen squares.
             // This method repeats for every direction.
-            newSquares = GetDirection(1, 0, board);
-            for (int i = 0; i < newSquares.Count; i++)
-            {
-                seenSquares.Add(newSquares[i]);
-            }
-
-            // = = = = = = = LEFT SQUARES = = = = = = = 
-            newSquares = GetDirection(-1, 0, board);
-            for (int i = 0; i < newSquares.Count; i++)
-            {
-                seenSquares.Add(newSquares[i]);
-            }
-
-            // = = = = = = = UP SQUARES = = = = = = = 
             newSquares = GetDirection(0, 1, board);
             for (int i = 0; i < newSquares.Count; i++)
             {
                 seenSquares.Add(newSquares[i]);
             }
 
-            // = = = = = = = DOWN SQUARES = = = = = = = 
+            // = = = = = = = LEFT SQUARES = = = = = = = 
             newSquares = GetDirection(0, -1, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = UP SQUARES = = = = = = = 
+            newSquares = GetDirection(1, 0, board);
+            for (int i = 0; i < newSquares.Count; i++)
+            {
+                seenSquares.Add(newSquares[i]);
+            }
+
+            // = = = = = = = DOWN SQUARES = = = = = = = 
+            newSquares = GetDirection(-1, 0, board);
             for (int i = 0; i < newSquares.Count; i++)
             {
                 seenSquares.Add(newSquares[i]);

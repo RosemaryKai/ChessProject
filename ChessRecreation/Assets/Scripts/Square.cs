@@ -248,7 +248,7 @@ namespace Chess
         /// <returns>The squares coordinates as a string.</returns>
         public override string ToString() 
         {
-            return $"{Name}";
+            return $"{Name}.";
         }
     }
 }

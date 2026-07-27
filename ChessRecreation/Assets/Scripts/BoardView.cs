@@ -62,9 +62,13 @@ namespace Chess
         // The game manager.
         [SerializeField] private ChessManager chessManager;
 
+        // Events & Delegates (for backend)!
+
         // METHODS of this class
         public void Start() 
         {
+            // Subscribe methods to necessary events.
+            Board.KingCastled += MovePieceView;
             // We first must read what color the player chose.
             PieceColor choice;
             if (GameManager.Instance == null)
@@ -399,7 +403,7 @@ namespace Chess
                                 pieceView = pieceViews[selectedPiece];        // Grab the PieceView of the piece.
                                 squareView = squareViews[square];             // Grab the SquareView of the square.
                                 pieceView.transform.position = squareView.transform.position +
-                                    new UnityEngine.Vector3(0, 0, -0.1f);     // Move the piece prefab to that square.
+                                    new Vector3(0, 0, -0.1f);                 // Move the piece prefab to that square.
 
                                 // Now flip the turns.
                                 chessManager.FlipTurn();
@@ -609,6 +613,19 @@ namespace Chess
                 Destroy(activeSquareHighlights[i]);
             }
             activeSquareHighlights.Clear();
+        }
+        /// <summary>
+        /// Moves the piece views of certain pieces
+        /// </summary>
+        /// <param name="piece"></param>
+        /// <param name="square"></param>
+        private void MovePieceView(Piece piece, Square square)
+        {
+            PieceView pView = pieceViews[piece];
+            SquareView squareView = squareViews[square];
+            pView.transform.position = squareView.transform.position
+                + new Vector3(0, 0, -0.1f);
+            selectedPiece.HasMoved = true;
         }
 
     }

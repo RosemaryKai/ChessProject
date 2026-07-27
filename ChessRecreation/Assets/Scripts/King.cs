@@ -152,14 +152,14 @@ namespace Chess
                 squares.Add(location.NorthWest);
             }
             // If the king has not moved, check if it can truly castle.
-            //if (CanCastle)
-            //{
-            //    List<Square> castleSquares = CastleCheck(board);
-            //    for (int i = 0; i < castleSquares.Count; i++)
-            //    {
-            //        squares.Add(castleSquares[i]);
-            //    }
-            //}
+            if (CanCastle)
+            {
+                List<Square> castleSquares = CastleCheck(board);
+                for (int i = 0; i < castleSquares.Count; i++)
+                {
+                    squares.Add(castleSquares[i]);
+                }
+            }
             return squares;
         }
 
@@ -296,9 +296,10 @@ namespace Chess
                         seesRook = false;
                     }
                 }
-                if(seesRook == true)
+                if(seesRook == true && !newSquares[newSquares.Count - 1].Piece.HasMoved)
                 {
-                    squares.Add(newSquares[newSquares.Count - 1]);
+                    squares.Add(newSquares[newSquares.Count - 2]); // Add the square 2 away from the king to castle.
+                    // The king will end up on that square upon a successful castle attempt.
                 }
             }
 
@@ -315,9 +316,10 @@ namespace Chess
                         seesRook = false;
                     }
                 }
-                if (seesRook == true)
+                if (seesRook == true && !newSquares[newSquares.Count - 1].Piece.HasMoved)
                 {
-                    squares.Add(newSquares[newSquares.Count - 1]);
+                    squares.Add(newSquares[newSquares.Count - 3]); // Add the square 2 away from the king to castle.
+                    // The king will end up on that square upon a successful castle attempt.
                 }
             }
             return squares;

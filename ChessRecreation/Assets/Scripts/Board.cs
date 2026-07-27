@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
+using Unity.VisualScripting;
 
 namespace Chess
 {
@@ -16,6 +17,13 @@ namespace Chess
         private Square[,] board;
         private List<Piece> blackPieces;
         private List<Piece> whitePieces;
+        private King blackKing;
+        private King whiteKing;
+        private Square previousBlackKingLocation;
+        private Square previousWhiteKingLocation;
+
+        // Backend Event
+        public static event Action<Piece, Square> KingCastled;
 
         // PROPERTIES of this class
         /// <summary> 
@@ -55,7 +63,7 @@ namespace Chess
                     y >= board.GetLength(1) || y < 0)
                 {
                     throw new IndexOutOfRangeException
-                        ("ERROR: Provided indecies not on the board.");
+                        ($"ERROR: Provided indecies not on the board. \nIndecies provided: {x}, {y}");
                 }
                 else
                 {
@@ -127,7 +135,7 @@ namespace Chess
                     // Squares on the first rank (1st rank).
                     else if (j == 0 && i != board.GetLength(0) - 1)
                     {
-                        currentSquare.SetNeighbors(board[i, j + 1], null, board[i + 1, j], board[i + 1, j], board[i - 1, j + 1], null, null, board[i + 1, j + 1]);
+                        currentSquare.SetNeighbors(board[i, j + 1], null, board[i + 1, j], board[i - 1, j], board[i - 1, j + 1], null, null, board[i + 1, j + 1]);
                     }
                     // Squares on the final file (H file).
                     else if (i == board.GetLength(0) - 1 && j != board.GetLength(1) - 1)
@@ -216,6 +224,7 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.White);
                         whitePieces.Add(newKing);
                         board[j, i].Piece = newKing;
+                        whiteKing = newKing;
                     }
                 }
             }
@@ -269,6 +278,7 @@ namespace Chess
                         King newKing = new King(board[j, i], PieceColor.Black);
                         blackPieces.Add(newKing);
                         board[j, i].Piece = newKing;
+                        blackKing = newKing;
                     }
                 }
             }
@@ -347,7 +357,11 @@ namespace Chess
                 Piece capturedPiece = square.Piece;
                 capturedPiece.Captured();
             }
-            // So update the piece's location to match.
+            // Now let's check if it's a king- this is for castling.
+            // It'll be done in a helper method, so it's easier to find later.
+            Castling(piece, square);
+
+            // Now update the piece's location to match.
             piece.Location.Piece = null;                // Sets the piece's current location to null.
             piece.Location = square;                    // Sets the piece's location to the square.
             square.Piece = piece;                       // Sets the square's piece to that piece.
@@ -384,6 +398,82 @@ namespace Chess
                     whitePieces[i].Attack(this);
             }
         }
+
+        private void Castling(Piece piece, Square square)
+        {
+            // First, we have to make sure that the piece is a king (possibly including rooks later down the line).
+            // If it isn't, just exit the method.
+            if(piece is not King king)
+            {
+                return;
+            }
+
+            // Now, being able to access it, let's make sure it can castle.
+            if (king.CanCastle)
+            {
+                if (piece.Color == PieceColor.White) // We must check for both colors, as they castle to different coordinates.
+                {
+                    // Save both G1 and C1 to their own variables, as they are castling squares.
+                    Square G1 = board[6, 0];
+                    Square C1 = board[2, 0];
+                    // Now we have to check if the king is trying to move to one of those two squares.
+                    if(square == G1 && !G1.East.Piece.HasMoved)
+                    {
+                        UnityEngine.Debug.Log("Moved king to G1");
+                        Rook rook = (Rook)G1.East.Piece;
+                        // Now we move the Rook.
+                        rook.Location.Piece = null;
+                        rook.Location = G1.West;   
+                        G1.West.Piece = rook;
+
+                        // Finally, invoke the Castled method!
+                        KingCastled?.Invoke(rook, G1.West);
+                    }
+                    else if(square == C1 && !C1.West.West.Piece.HasMoved)
+                    {
+                        Rook rook = (Rook)C1.West.West.Piece;
+                        // Now we move the Rook.
+                        rook.Location.Piece = null;
+                        rook.Location = C1.East;
+                        C1.East.Piece = rook;
+
+                        // Finally, invoke the Castled method!
+                        KingCastled?.Invoke(rook, C1.East);
+                    }
+                }
+                else // For the black king!
+                {
+                    // Save both G8 and C8 to their own variables, as they are castling squares.
+                    Square G8 = board[6, 7];
+                    Square C8 = board[2, 7];
+                    // Now we have to check if the king is trying to move to one of those two squares.
+                    if (square == G8 && !G8.East.Piece.HasMoved)
+                    {
+                        UnityEngine.Debug.Log("Moved king to G8");
+                        Rook rook = (Rook)G8.East.Piece;
+                        // Now we move the Rook.
+                        rook.Location.Piece = null;
+                        rook.Location = G8.West;
+                        G8.West.Piece = rook;
+
+                        // Finally, invoke the Castled method!
+                        KingCastled?.Invoke(rook, G8.West);
+                    }
+                    else if (square == C8 && !C8.West.West.Piece.HasMoved)
+                    {
+                        Rook rook = (Rook)C8.West.West.Piece;
+                        // Now we move the Rook.
+                        rook.Location.Piece = null;
+                        rook.Location = C8.East;
+                        C8.East.Piece = rook;
+
+                        // Finally, invoke the Castled method!
+                        KingCastled?.Invoke(rook, C8.East);
+                    }
+                }
+            }
+        }
+
         /// <summary>
         /// Updates the data of squares using two other methods.
         /// </summary>
@@ -391,6 +481,7 @@ namespace Chess
         {
             ResetSquares();
             GetAttackMap();
-        }        
+        }
+        
     }
 }

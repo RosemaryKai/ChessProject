@@ -114,8 +114,8 @@ namespace Chess
         /// <summary>
         /// Draws a line of every square the piece could move to from its current location if there were nothing in the way.
         /// </summary>
-        /// <param name="rankStep">How far the piece moves on the rank.</param>
-        /// <param name="fileStep">How far the piece moves on the file.</param>
+        /// <param name="rankStep">How far the piece moves through ranks.</param>
+        /// <param name="fileStep">How far the piece moves through files.</param>
         /// <param name="board">The board.</param>
         /// <returns>The drawn ray in form of a list of squares.</returns>
         /// <exception cref="Exception">If both the Rank and the File steps are 0.</exception>
@@ -152,6 +152,7 @@ namespace Chess
 
                     // Unlike the upcoming method, we don't need to check for anything.
                     // Every square will be added.
+                    squares.Add(currentSquare);
                 }
             }
 
@@ -164,11 +165,8 @@ namespace Chess
                     currentFile += fileStep;
                     currentSquare = board[currentFile, currentRank];
 
-                    // If the square is not occupied? Add it to the list.
-                    if (!currentSquare.IsOccupied)
-                    {
-                        squares.Add(currentSquare);
-                    }
+                    // No matter what, add every square until we reach the edge
+                    squares.Add(currentSquare);
                 }
             }
 
@@ -180,11 +178,8 @@ namespace Chess
                     currentRank += rankStep;
                     currentSquare = board[currentFile, currentRank];
 
-                    // If the square is not occupied? Add it to the list.
-                    if (!currentSquare.IsOccupied)
-                    {
-                        squares.Add(currentSquare);
-                    }
+                    // No matter what, add every square until we reach the edge
+                    squares.Add(currentSquare);
                 }
             }
             // Return the list of squares.
