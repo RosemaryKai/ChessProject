@@ -1,7 +1,8 @@
 using UnityEngine;
 using UnityEngine.SceneManagement;
+using Chess.Pieces;
 
-namespace Chess
+namespace Chess.Game
 {
     public class GameManager : MonoBehaviour
     {

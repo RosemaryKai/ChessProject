@@ -5,9 +5,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Chess.Pieces;
+using Chess.Cards;
+using Chess.GameBoard;
+using Chess.Game;
 
 
-namespace Chess
+namespace Chess.Unity
 {
     /// <summary>
     /// The frontend facing Board for the game.
@@ -31,7 +35,7 @@ namespace Chess
         private Dictionary<Square, SquareView> squareViews;
 
         // Rotation for the camera.
-        [SerializeField] new private Camera camera;
+        [SerializeField] private Camera camera;
 
         // Objects and fields required from Unity.
         // Prefabs for the game!
@@ -97,9 +101,6 @@ namespace Chess
             squareViews = new Dictionary<Square, SquareView>();
             activeHighlights = new List<GameObject>();
             activeSquareHighlights = new List<GameObject>();
-
-            // Now create a variable to store the color of the square.
-            Sprite texture;
             
             // Now let's iterate through the boards...
             for (int r = 0; r < board.Ranks; r++)

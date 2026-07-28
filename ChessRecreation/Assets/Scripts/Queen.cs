@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chess.GameBoard;
 
-namespace Chess
+namespace Chess.Pieces
 {
     /// <summary>
     /// The most powerful piece- a major piece that can attack horizontally and diagonally.

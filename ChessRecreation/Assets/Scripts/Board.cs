@@ -5,8 +5,10 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
+using Chess.Game;
+using Chess.Pieces;
 
-namespace Chess
+namespace Chess.GameBoard
 {
     /// <summary> 
     /// The board which pieces and squares are on. 

@@ -3,8 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Chess.Pieces;
 
-namespace Chess
+namespace Chess.GameBoard
 {
     /// <summary>
     /// A square on the chessboard.

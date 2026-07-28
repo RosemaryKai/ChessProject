@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
+using Chess.GameBoard;
+using Chess.Cards;
 
-namespace Chess
+namespace Chess.Pieces
 {
     /// <summary>
     /// The building block of any chess position.

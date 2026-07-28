@@ -1,47 +1,51 @@
+using Chess.Pieces;
 using System;
 using UnityEngine;
-using Chess;
 
-public class ChessManager : MonoBehaviour
+namespace Chess.Game
 {
-    // FIELDS of this class
-    private PieceColor turn;
-    public static event Action TurnFlipped;  
-
-    // PROPERTIES of this class
-    public PieceColor Turn
+    public class ChessManager : MonoBehaviour
     {
-        get { return turn; }
-        set { turn = value; }
-    }
+        // FIELDS of this class
+        private PieceColor turn;
+        public static event Action TurnFlipped;
 
-    // METHODS of this class
-
-    // Start is called once before the first execution of Update after the MonoBehaviour is created
-    void Start()
-    {
-        turn = PieceColor.White;
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    /// <summary>
-    /// Flips the colors turns.
-    /// </summary>
-    public void FlipTurn()
-    {
-        if(turn == PieceColor.White)
+        // PROPERTIES of this class
+        public PieceColor Turn
         {
-            turn = PieceColor.Black;
+            get { return turn; }
+            set { turn = value; }
         }
-        else
+
+        // METHODS of this class
+
+        // Start is called once before the first execution of Update after the MonoBehaviour is created
+        void Start()
         {
             turn = PieceColor.White;
         }
-        // This event will mainly be for UI
-        TurnFlipped?.Invoke();
+
+        // Update is called once per frame
+        void Update()
+        {
+
+        }
+        /// <summary>
+        /// Flips the colors turns.
+        /// </summary>
+        public void FlipTurn()
+        {
+            if (turn == PieceColor.White)
+            {
+                turn = PieceColor.Black;
+            }
+            else
+            {
+                turn = PieceColor.White;
+            }
+            // This event will mainly be for UI
+            TurnFlipped?.Invoke();
+        }
     }
 }
+

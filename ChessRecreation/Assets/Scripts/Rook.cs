@@ -5,8 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Unity.VisualScripting;
 using UnityEngine.UIElements;
+using Chess.GameBoard;
 
-namespace Chess
+namespace Chess.Pieces
 {
     /// <summary>
     /// The major piece that attacks in all four cardinal directions.

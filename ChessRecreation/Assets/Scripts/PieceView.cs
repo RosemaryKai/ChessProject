@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Chess.Pieces;
 
-namespace Chess
+namespace Chess.Unity
 {
     /// <summary>
     /// The Piece class to go on GameObjects. 

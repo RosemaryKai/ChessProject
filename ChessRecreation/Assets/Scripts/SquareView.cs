@@ -4,8 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Chess.GameBoard;
 
-namespace Chess
+namespace Chess.Unity
 {
     /// <summary>
     /// A front facing square for GameObjects to hold.

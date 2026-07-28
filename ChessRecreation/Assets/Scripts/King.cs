@@ -5,8 +5,10 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
+using Chess.Game;
+using Chess.GameBoard;
 
-namespace Chess
+namespace Chess.Pieces
 {
     internal class King : Piece
     {
