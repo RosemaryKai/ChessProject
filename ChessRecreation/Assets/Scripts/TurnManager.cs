@@ -4,14 +4,14 @@ using UnityEngine;
 
 namespace Chess.Game
 {
-    public class ChessManager : MonoBehaviour
+    public class TurnManager : MonoBehaviour
     {
         // FIELDS of this class
-        private PieceColor turn;
+        private static PieceColor turn;
         public static event Action TurnFlipped;
 
         // PROPERTIES of this class
-        public PieceColor Turn
+        public static PieceColor Turn
         {
             get { return turn; }
             set { turn = value; }

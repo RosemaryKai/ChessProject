@@ -64,7 +64,7 @@ namespace Chess.Unity
         [SerializeField] private Transform boardParent;
 
         // The game manager.
-        [SerializeField] private ChessManager chessManager;
+        [SerializeField] private TurnManager turnManager;
 
         // Events & Delegates (for backend)!
 
@@ -407,7 +407,7 @@ namespace Chess.Unity
                                     new Vector3(0, 0, -0.1f);                 // Move the piece prefab to that square.
 
                                 // Now flip the turns.
-                                chessManager.FlipTurn();
+                                turnManager.FlipTurn();
                             }
                             Debug.Log($"Did it capture? {capture}");
 
@@ -416,7 +416,7 @@ namespace Chess.Unity
                         }
                     }
                     // If we don't have a selected piece? Select the piece we clicked on. 
-                    else if(chessManager.Turn == pieceView.Piece.Color)
+                    else if(TurnManager.Turn == pieceView.Piece.Color)
                     {
                         selectedPiece = pieceView.Piece;
                         HighlightMoves(selectedPiece);
@@ -445,7 +445,7 @@ namespace Chess.Unity
                             selectedPiece.HasMoved = true;
 
                             // Now flip the turns.
-                            chessManager.FlipTurn();
+                            turnManager.FlipTurn();
                         }
 
                         // Finally, de-select the piece.

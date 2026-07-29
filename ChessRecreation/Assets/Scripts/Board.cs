@@ -161,7 +161,7 @@ namespace Chess.GameBoard
 
             // Now set up methods! Subscribing to events
             // and setting up the starting position.
-            ChessManager.TurnFlipped += UpdateSquareData;
+            TurnManager.TurnFlipped += UpdateSquareData;
             StartingPosition();
         }
         // METHODS of this class

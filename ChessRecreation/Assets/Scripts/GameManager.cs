@@ -7,6 +7,8 @@ namespace Chess.Game
     public class GameManager : MonoBehaviour
     {
         // FIELDS of this class
+        private Player blackPlayer;
+        private Player whitePlayer;
         private static GameManager instance;
         private PieceColor playerChoice;
         [SerializeField] private GameObject colorMenu;

@@ -8,10 +8,14 @@ namespace Chess.Game
 {
     public enum GameStates
     {
+        TurnStart,
+        DrawState,
         CardState,
-        MoveState
+        MoveState,
+        EndState
     }
     internal class GameState
     {
+
     }
 }

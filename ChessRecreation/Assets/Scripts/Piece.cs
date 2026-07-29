@@ -32,6 +32,7 @@ namespace Chess.Pieces
     internal abstract class Piece 
     {
         // FIELDS of this class
+        protected Player owner;
         protected int value;
         protected Square location; 
         protected bool isCaptured;
@@ -40,6 +41,10 @@ namespace Chess.Pieces
         protected bool hasMoved;
 
         // PROPERTIES of this class 
+        public Player Owner
+        {
+            get { return owner; }
+        }
         /// <summary> 
         /// If the piece is captured or not. 
         /// </summary> 

@@ -9,5 +9,10 @@ namespace Chess.Unity
 {
     internal class CardView : MonoBehaviour
     {
+        // FIELDS of this class
+
+        // PROPERTIES of this classd
+
+        // METHODS of this class
     }
 }
