@@ -15,6 +15,14 @@ namespace Chess.Pieces
     /// </summary>
     internal class Pawn : Piece
     {
+        /// <summary>
+        /// The special abilities of a pawn.
+        /// </summary>
+        public enum PawnAbilities
+        {
+            UnstoppableForce,
+            ImmovableObject
+        }
         // FIELDS of this class
 
 

@@ -33,6 +33,7 @@ namespace Chess.Pieces
     {
         // FIELDS of this class
         protected Player owner;
+        protected int hitPoints;
         protected int value;
         protected Square location; 
         protected bool isCaptured;
@@ -41,6 +42,9 @@ namespace Chess.Pieces
         protected bool hasMoved;
 
         // PROPERTIES of this class 
+        /// <summary>
+        /// The owner of this piece.
+        /// </summary>
         public Player Owner
         {
             get { return owner; }
@@ -83,6 +87,14 @@ namespace Chess.Pieces
             get { return value; }
         }
         /// <summary>
+        /// The health of the piece.
+        /// </summary>
+        public int HitPoints
+        {
+            get { return hitPoints; }
+            set { hitPoints = value; }
+        }
+        /// <summary>
         /// If the piece has moved or not.
         /// </summary>
         public bool HasMoved
@@ -113,7 +125,6 @@ namespace Chess.Pieces
         /// <returns></returns>
         public abstract List<Square> Attack(Board board); // In pretty much every attack method, the piece in question will use
         // the GetSeenSquare method to check every square until it runs into something it cannot move through. 
-
         public override string ToString()
         {
             return $"{color} {pieceType}; {location}, Has moved? {hasMoved}";

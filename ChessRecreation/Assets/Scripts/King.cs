@@ -12,6 +12,14 @@ namespace Chess.Pieces
 {
     internal class King : Piece
     {
+        /// <summary>
+        /// The special abilities of a King.
+        /// </summary>
+        public enum KingAbilities
+        {
+            WarriorKing,
+            RoyalDecree
+        }
         // FIELDS of this class
         private bool isChecked;
 

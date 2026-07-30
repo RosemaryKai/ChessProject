@@ -10,8 +10,7 @@ namespace Chess.Game
     {
         TurnStart,
         DrawState,
-        CardState,
-        MoveState,
+        PlayState,
         EndState
     }
     internal class GameState

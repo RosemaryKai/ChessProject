@@ -12,6 +12,14 @@ namespace Chess.Pieces
     /// </summary>
     internal class Knight : Piece
     {
+        /// <summary>
+        /// The special abilities of a Knight.
+        /// </summary>
+        public enum KnightAbilities
+        {
+            Mounted,
+            Cavalry
+        }
         // FIELDS of this class
 
 

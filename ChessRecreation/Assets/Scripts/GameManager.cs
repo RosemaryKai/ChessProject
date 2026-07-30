@@ -11,6 +11,7 @@ namespace Chess.Game
         private Player whitePlayer;
         private static GameManager instance;
         private PieceColor playerChoice;
+        private static GameStates gameState;
         [SerializeField] private GameObject colorMenu;
 
         // PROPERTIES of this class
@@ -25,6 +26,11 @@ namespace Chess.Game
         public static GameManager Instance
         {
             get { return instance; }
+        }
+
+        public static GameStates CurrentGameState
+        {
+            get { return gameState; }
         }
         void Awake()
         {

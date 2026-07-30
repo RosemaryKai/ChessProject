@@ -12,6 +12,14 @@ namespace Chess.Pieces
     /// </summary>
     internal class Queen : Piece
     {
+        /// <summary>
+        /// The special abilities of a Queen.
+        /// </summary>
+        public enum QueenAbilities
+        {
+            Battlecry,
+            SecondWind
+        }
         // FIELDS of this class
 
 

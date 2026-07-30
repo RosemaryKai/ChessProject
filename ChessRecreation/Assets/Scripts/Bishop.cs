@@ -13,6 +13,11 @@ namespace Chess.Pieces
     /// </summary>
     internal class Bishop : Piece
     {
+        public enum BishopAbilities
+        {
+            Crusader,
+            Cleric
+        }
         // FIELDS of this class
 
 

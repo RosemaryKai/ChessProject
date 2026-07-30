@@ -27,13 +27,13 @@ namespace Chess.Cards
             get { return targetPieceType; }
         }
         // CTORs of this class
-        public AbilityCard(string name, string description, PieceType targetPieceType) :
-            base(name, description)
+        public AbilityCard(Player owner, string name, string description) :
+            base(owner, name, description)
         {
-            this.targetPieceType = targetPieceType;
+
         }
 
         // METHODS of this class
-        protected abstract override bool canPlay(GameState gameState);
+        protected abstract override bool canPlay(GameStates gameState);
     }
 }

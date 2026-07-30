@@ -14,6 +14,14 @@ namespace Chess.Pieces
     /// </summary>
     internal class Rook : Piece
     {
+        /// <summary>
+        /// Special abilities of a Rook.
+        /// </summary>
+        public enum RookAbilities
+        {
+            SeigeTower,
+            TrueCastle
+        }
         // FIELDS of this class
 
 

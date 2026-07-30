@@ -35,7 +35,11 @@ namespace Chess.Game
         }
 
         // CTORs of this class
-
+        public Player(PieceColor color)
+        {
+            this.color = color;
+        }
         // METHODS of this class
+
     }
 }

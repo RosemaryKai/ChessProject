@@ -20,13 +20,13 @@ namespace Chess.Cards
         /// <summary>
         /// Constructor for an Active Card.
         /// </summary>
-        public ActiveCard(string name, string description) :
-            base(name, description)
+        public ActiveCard(Player owner, string name, string description) :
+            base(owner, name, description)
         {
 
         }
         // METHODS of this class
-        protected abstract override bool canPlay(GameState gameState);
+        protected abstract override bool canPlay(GameStates gameState);
 
     }
 }

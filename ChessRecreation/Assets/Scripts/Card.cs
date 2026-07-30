@@ -26,9 +26,6 @@ namespace Chess.Cards
         protected int cost;
         protected GameState gameState;
 
-        // Events
-        public static event Action CardPlayed;
-
         // PROPERTIES of this class
         /// <summary>
         /// The owner of the card.
@@ -63,7 +60,7 @@ namespace Chess.Cards
         /// </summary>
         public bool CanPlay
         {
-            get { return canPlay(gameState); }
+            get { return canPlay(GameManager.CurrentGameState); }
         }
         // CTORs of this class
         /// <summary>
@@ -82,6 +79,6 @@ namespace Chess.Cards
         /// </summary>
         /// <param name="gameState">The current state of the game.</param>
         /// <returns>True if the card can be played, false otherwise.</returns>
-        protected abstract bool canPlay(GameState gameState);
+        protected abstract bool canPlay(GameStates gameState);
     }
 }
