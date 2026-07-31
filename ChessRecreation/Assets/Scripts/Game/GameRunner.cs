@@ -4,16 +4,18 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using UnityEngine;
-using Chess.Cards;
 
 namespace Chess.Game
 {
-    internal class CardManager : MonoBehaviour
+    internal class GameRunner : MonoBehaviour
     {
         // FIELDS of this class
-        [SerializeField] private GameObject card;
-        // PROPERTIES of this class
-
+        private Game game;
+        [SerializeField] private GameObject cardPrefab;
         // METHODS of this class
+        private void Start()
+        {
+            game = new Game(cardPrefab);
+        }
     }
 }

@@ -4,7 +4,7 @@ using UnityEngine;
 
 namespace Chess.Game
 {
-    public class TurnManager : MonoBehaviour
+    public class TurnManager
     {
         // FIELDS of this class
         private static PieceColor turn;
@@ -18,18 +18,6 @@ namespace Chess.Game
         }
 
         // METHODS of this class
-
-        // Start is called once before the first execution of Update after the MonoBehaviour is created
-        void Start()
-        {
-            turn = PieceColor.White;
-        }
-
-        // Update is called once per frame
-        void Update()
-        {
-
-        }
         /// <summary>
         /// Flips the colors turns.
         /// </summary>

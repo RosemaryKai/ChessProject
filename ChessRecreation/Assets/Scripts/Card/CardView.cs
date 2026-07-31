@@ -10,8 +10,9 @@ namespace Chess.Unity
     internal class CardView : MonoBehaviour
     {
         // FIELDS of this class
+        [SerializeField] private GameObject cardPrefab;
 
-        // PROPERTIES of this classd
+        // PROPERTIES of this class
 
         // METHODS of this class
     }

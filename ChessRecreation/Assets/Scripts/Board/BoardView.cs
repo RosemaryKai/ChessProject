@@ -19,9 +19,6 @@ namespace Chess.Unity
     internal class BoardView : MonoBehaviour
     {
         // FIELDS of this class
-        // The board the game is taking place on!
-        private Board board;
-
         // The pieces..
         private Piece selectedPiece;
         private Piece previouslySelectedPiece;
@@ -58,13 +55,8 @@ namespace Chess.Unity
         [SerializeField] private GameObject pieceHighlightPrefab;
 
         // Now other data for the game.
-        [SerializeField] private Sprite darkSquare;
-        [SerializeField] private Sprite lightSquare;
         [SerializeField] private Material squareHighlight;
         [SerializeField] private Transform boardParent;
-
-        // The game manager.
-        [SerializeField] private TurnManager turnManager;
 
         // Events & Delegates (for backend)!
 
@@ -92,8 +84,6 @@ namespace Chess.Unity
             {
                 camera.transform.rotation = new Quaternion(0, 0, 180, 0);
             }
-            // Create a new Board object.
-            board = new Board();
             Quaternion rotation = camera.transform.rotation;
 
             // Instantiate the dictionaries & lists.
@@ -103,10 +93,10 @@ namespace Chess.Unity
             activeSquareHighlights = new List<GameObject>();
             
             // Now let's iterate through the boards...
-            for (int r = 0; r < board.Ranks; r++)
+            for (int r = 0; r < Game.Game.Board.Ranks; r++)
             {
                 GameObject newSquare;
-                for (int f = 0; f < board.Files; f++)
+                for (int f = 0; f < Game.Game.Board.Files; f++)
                 {
                     #region squareInstantiation
                     // SQUARE INSTANTIATION
@@ -130,7 +120,7 @@ namespace Chess.Unity
                     // Grabs the SquareView component off of the GameObject.
                     // Also make it active so it can be seen!
                     SquareView sView = newSquare.GetComponent<SquareView>();
-                    sView.Square = board[r, f];
+                    sView.Square = Game.Game.Board[r, f];
                     newSquare.SetActive(true);
 
                     // Now add that square and squareview to the dictionary.
@@ -395,7 +385,7 @@ namespace Chess.Unity
                         else
                         {
                             // Capture it using logic in the Board class.
-                            bool capture = board.TryMove(selectedPiece, square);
+                            bool capture = Game.Game.Board.TryMove(selectedPiece, square);
 
                             // If the capture was succesful, move the selected piece.
                             if (capture)
@@ -407,7 +397,7 @@ namespace Chess.Unity
                                     new Vector3(0, 0, -0.1f);                 // Move the piece prefab to that square.
 
                                 // Now flip the turns.
-                                turnManager.FlipTurn();
+                                Game.Game.FlipTurn();
                             }
                             Debug.Log($"Did it capture? {capture}");
 
@@ -434,7 +424,7 @@ namespace Chess.Unity
                     // Now let's move a piece- if it's selected.
                     if (selectedPiece != null)
                     {
-                        bool moved = board.TryMove(selectedPiece, squareView.Square);
+                        bool moved = Game.Game.Board.TryMove(selectedPiece, squareView.Square);
 
                         // Move the prefab to the new square- if the move was successful.
                         if (moved)
@@ -445,7 +435,7 @@ namespace Chess.Unity
                             selectedPiece.HasMoved = true;
 
                             // Now flip the turns.
-                            turnManager.FlipTurn();
+                            Game.Game.FlipTurn();
                         }
 
                         // Finally, de-select the piece.
@@ -538,12 +528,12 @@ namespace Chess.Unity
             }
 
             // Now get the list of squares that the piece can see.
-            List<Square> vision = piece.Move(board);
+            List<Square> vision = piece.Move(Game.Game.Board);
 
             // If they're pawns, try to get their attacking squares.
             if(piece is Pawn)
             {
-                List<Square> pawnAttacks = piece.Attack(board);
+                List<Square> pawnAttacks = piece.Attack(Game.Game.Board);
                 if(pawnAttacks.Count > 0)
                 {
                     for (int i = 0; i < pawnAttacks.Count; i++)
@@ -616,10 +606,10 @@ namespace Chess.Unity
             activeSquareHighlights.Clear();
         }
         /// <summary>
-        /// Moves the piece views of certain pieces
+        /// Moves the piece views of certain pieces.
         /// </summary>
-        /// <param name="piece"></param>
-        /// <param name="square"></param>
+        /// <param name="piece">The piece being moved.</param>
+        /// <param name="square">The square the piece is moving to.</param>
         private void MovePieceView(Piece piece, Square square)
         {
             PieceView pView = pieceViews[piece];
